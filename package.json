@@ -1,0 +1,14 @@
+{
+  "name": "compraventa-backend",
+  "version": "1.0.0",
+  "description": "Proyecto compraventa para el curso de Ingeniería Web - UdeA",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Compraventa"
+  ],
+  "author": "Andrés Isaza, Santiago Gaviria, Aiber Ruiz, Santiago Cadavid, Andrés Arango",
+  "license": "MIT"
+}
