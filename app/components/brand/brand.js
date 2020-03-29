@@ -38,7 +38,9 @@ const getBrandById = async (id) => {
 }
 
 const updateBrand = async (id, body) => {
-    const [updatedRow] = await Brand.update({ ...body }, { where: { id } });
+    const { brandName } = body;
+    const brandData = { nombre_marca: brandName };
+    const [updatedRow] = await Brand.update({ ...brandData }, { where: { id } });
     return updatedRow;
 }
 
