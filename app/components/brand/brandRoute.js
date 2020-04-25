@@ -4,18 +4,18 @@ const controller = require('./brandController');
 const router = new Router();
 
 router.route('/')
-    .get((req, res) => { controller.getBrands(req, res) });
+    .get(controller.getBrands);
 
 router.route('/:id')
-    .get((req, res) => { controller.getBrandById(req, res) });
+    .get(controller.getBrandById);
 
 router.route('/')
-    .post((req, res) => { controller.createBrand(req, res) });
+    .post(controller.createBrand);
 
 router.route('/:id')
-    .put((req, res) => { controller.updateBrand(req, res) });
+    .put(controller.updateBrand);
 
 router.route('/:id')
-    .delete((req, res) => { controller.deleteBrand(req, res) });
+    .delete(controller.deleteBrand);
 
 module.exports = router;
