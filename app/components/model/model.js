@@ -24,6 +24,9 @@ const getAllModels = async () => {
 
 const getModelById = async (id) => {
   const model = await Model.findByPk(id, { include: Brand });
+
+  if (!model) return null;
+  
   const modelFormatted = {
     id: model.id,
     modelName: model.nombre_modelo,

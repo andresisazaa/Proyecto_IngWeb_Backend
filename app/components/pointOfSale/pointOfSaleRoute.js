@@ -15,7 +15,7 @@ router.route('/')
 router.route('/:id')
     .put((req, res) => { controller.updatePointOfSale(req, res) });
 
-router.route('/:id')
-    .delete((req, res) => { controller.deletePointOfSale(req, res) });
+/*router.route('/:id')
+    .delete((req, res) => { controller.deletePointOfSale(req, res) });*/
 
 module.exports = router;

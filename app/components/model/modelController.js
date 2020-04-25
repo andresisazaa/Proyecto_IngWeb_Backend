@@ -9,7 +9,6 @@ const getAllModels = async (req, res) => {
             .send(models);
 
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo obtener la información de las marcas' });
@@ -19,13 +18,19 @@ const getAllModels = async (req, res) => {
 const getModelById = async (req, res) => {
     const {id} = req.params;
     try {
-        const models = await Model.getModelById(id);
-        return res
+        const model = await Model.getModelById(id);
+
+        if (model) {
+            return res
             .status(httpStatus.OK)
-            .send(models);
+            .send(model);
+        } else {
+            return res
+            .status(httpStatus.NOT_FOUND)
+            .send({message: "No existe el modelo"});
+        }
 
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo obtener la información de las marcas' });
@@ -48,7 +53,6 @@ const createModel = async (req, res) => {
             .send(model);
 
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo obtener la información de las marcas' });
@@ -73,7 +77,6 @@ const updateModelById = async (req, res) => {
         
 
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo obtener la información de las marcas' });
