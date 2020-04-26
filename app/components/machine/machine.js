@@ -34,67 +34,93 @@ Status.hasMany(StatusPerMachine, { foreignKey: "estado_id" });
 StatusPerMachine.belongsTo(Status, { foreignKey: "estado_id" });
 
 const getAllMachines = async () => {
-    const machines = await Machine.findAll({include: [Model, PointOfSale, {model: StatusPerMachine, attributes: ['fecha'], include: Status}]});
+  const machines = await Machine.findAll({
+    include: [
+      Model,
+      PointOfSale,
+      { model: StatusPerMachine, attributes: ["fecha"], include: Status },
+    ],
+  });
 
-    const machinesFormatted = machines.map((machine) => ({
-        id: machine.id,
-        type: machine.tipo,
-        purchaseValue: machine.valor_compra,
-        saleValue: machine.valor_venta,
-        purchaseId: machine.compra_id,
-        saleId: machine.venta_id,
-        model: {
-            id: machine.Modelo.id,
-            name: machine.Modelo.nombre_modelo,
-            brand: machine.Modelo.marca_id
-        },
-        pointOfSale: {
-            id: machine.Punto_de_Ventum.id,
-            name: machine.Punto_de_Ventum.nombre_pdv,
-            address: machine.Punto_de_Ventum.direccion
-        },
-        statuses: machine.Estado_por_Maquinas.map((state) => ({
-            id: state.Estado.id,
-            date: state.fecha,
-            name: state.Estado.nombre_estado
-        }))
-    }));
+  const machinesFormatted = machines.map(machine => ({
+    id: machine.id,
+    type: machine.tipo,
+    purchaseValue: machine.valor_compra,
+    saleValue: machine.valor_venta,
+    purchaseId: machine.compra_id,
+    saleId: machine.venta_id,
+    model: {
+      id: machine.Modelo.id,
+      name: machine.Modelo.nombre_modelo,
+      brand: machine.Modelo.marca_id,
+    },
+    pointOfSale: {
+      id: machine.Punto_de_Ventum.id,
+      name: machine.Punto_de_Ventum.nombre_pdv,
+      address: machine.Punto_de_Ventum.direccion,
+    },
+    statuses: machine.Estado_por_Maquinas.map(state => ({
+      id: state.Estado.id,
+      date: state.fecha,
+      name: state.Estado.nombre_estado,
+    })),
+  }));
 
-    return machinesFormatted;
-}
+  return machinesFormatted;
+};
 
 const getMachineById = async (id) => {
-    const machine = await Machine.findByPk(id, {include: [Model, PointOfSale, {model: StatusPerMachine, attributes: ['fecha'], include: Status}]});
+  const machine = await Machine.findByPk(id, {
+    include: [
+      Model,
+      PointOfSale,
+      { model: StatusPerMachine, attributes: ["fecha"], include: Status },
+    ],
+  });
 
-    if (!machine) return null;
+  if (!machine) return null;
 
-    const machineFormatted = {
-        id: machine.id,
-        type: machine.tipo,
-        purchaseValue: machine.valor_compra,
-        saleValue: machine.valor_venta,
-        purchaseId: machine.compra_id,
-        saleId: machine.venta_id,
-        model: {
-            id: machine.Modelo.id,
-            name: machine.Modelo.nombre_modelo,
-            brand: machine.Modelo.marca_id
-        },
-        pointOfSale: {
-            id: machine.Punto_de_Ventum.id,
-            name: machine.Punto_de_Ventum.nombre_pdv,
-            address: machine.Punto_de_Ventum.direccion
-        },
-        statuses: machine.Estado_por_Maquinas.map((state) => ({
-            id: state.Estado.id,
-            date: state.fecha,
-            name: state.Estado.nombre_estado
-        }))
-    };
-    return machineFormatted;
+  const machineFormatted = {
+    id: machine.id,
+    type: machine.tipo,
+    purchaseValue: machine.valor_compra,
+    saleValue: machine.valor_venta,
+    purchaseId: machine.compra_id,
+    saleId: machine.venta_id,
+    model: {
+      id: machine.Modelo.id,
+      name: machine.Modelo.nombre_modelo,
+      brand: machine.Modelo.marca_id,
+    },
+    pointOfSale: {
+      id: machine.Punto_de_Ventum.id,
+      name: machine.Punto_de_Ventum.nombre_pdv,
+      address: machine.Punto_de_Ventum.direccion,
+    },
+    statuses: machine.Estado_por_Maquinas.map(state => ({
+      id: state.Estado.id,
+      date: state.fecha,
+      name: state.Estado.nombre_estado,
+    })),
+  };
+  return machineFormatted;
+};
+
+const createMachines = async (requireData, machines) => {
+  const machinesData = machines.map(machine => ({
+    tipo: machine.type,
+    valor_compra: machine.purchaseValue,
+    modelo_id: machine.modelId,
+    compra_id: requireData.purchaseId,
+    punto_de_venta_id: requireData.posId
+  }));
+  const newMachines = await Machine.bulkCreate(machinesData);
+  return newMachines;
+  //{type: 'nueva', purchaseValue: 400000, modelId: 5}
 }
 
 module.exports = {
-    getAllMachines,
-    getMachineById
-}
+  getAllMachines,
+  getMachineById,
+  createMachines
+};

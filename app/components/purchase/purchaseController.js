@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Purchase = require('./purchase');
+const Util = require('./purchaseUtil');
 
 const getAllPurchases = async (req, res) => {
     try {
@@ -17,18 +18,18 @@ const getAllPurchases = async (req, res) => {
 
 const getPurchaseById = async (req, res) => {
     const { id } = req.params;
-    
+
     try {
         const purchase = await Purchase.getPurchaseById(id);
 
         if (purchase) {
             return res
-            .status(httpStatus.OK)
-            .send(purchase);
+                .status(httpStatus.OK)
+                .send(purchase);
         } else {
             return res
-            .status(httpStatus.NOT_FOUND)
-            .send({message: "No existe la compra"});
+                .status(httpStatus.NOT_FOUND)
+                .send({ message: "No existe la compra" });
         }
 
     } catch (error) {
@@ -38,7 +39,31 @@ const getPurchaseById = async (req, res) => {
     }
 }
 
+const createPurchase = async (req, res) => {
+    const { providerId, machines } = req.body;
+    const { employee } = req.body; // implementar
+    // email, role, pdv, id
+    if (!providerId || machines.length === 0) {
+        return res
+            .status(httpStatus.BAD_REQUEST)
+            .send({ message: 'Parámetros incorrectos' });
+    }
+    try {
+        const purchase = await Purchase.createPurchase(employee, req.body);
+        if (purchase) {
+            return res
+                .status(httpStatus.OK)
+                .send(purchase);
+        }
+    } catch (error) {
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({ message: 'Ocurrió un error' });
+    }
+}
+
 module.exports = {
     getAllPurchases,
-    getPurchaseById
+    getPurchaseById,
+    createPurchase
 }

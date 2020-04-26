@@ -16,18 +16,18 @@ const getAllMachines = async (req, res) => {
 }
 
 const getMachineById = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     try {
         const machine = await Machine.getMachineById(id);
 
         if (machine) {
             return res
-            .status(httpStatus.OK)
-            .send(machine);
+                .status(httpStatus.OK)
+                .send(machine);
         } else {
             return res
-            .status(httpStatus.NOT_FOUND)
-            .send({message: "No existe la máquina"});
+                .status(httpStatus.NOT_FOUND)
+                .send({ message: "No existe la máquina" });
         }
 
     } catch (error) {
@@ -38,7 +38,7 @@ const getMachineById = async (req, res) => {
 }
 
 const createMachine = async (req, res) => {
-    const {modelName, brandId} = req.body;
+    const { modelName, brandId } = req.body;
 
     if (!modelName || !brandId) {
         return res
@@ -67,14 +67,13 @@ const updateMachineById = async (req, res) => {
 
         if (wasUpdated) {
             return res
-            .status(httpStatus.OK)
-            .send({message: "Machineo actualizado correctamente"});
+                .status(httpStatus.OK)
+                .send({ message: "Machineo actualizado correctamente" });
         } else {
             return res
-            .status(httpStatus.OK)
-            .send({message: "No se ha actualizado ningún campo del modelo"});
+                .status(httpStatus.OK)
+                .send({ message: "No se ha actualizado ningún campo del modelo" });
         }
-        
 
     } catch (error) {
         return res
