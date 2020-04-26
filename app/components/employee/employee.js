@@ -22,6 +22,21 @@ const createEmployee = async (body) => {
     return employeeFormatted;
 }
 
+const updateEmployee = async (id, body) => {
+    const { name, document, phone, email, location, point_of_sale } = body;
+    const employeeData = {
+        nombre: name,
+        documento: document,
+        telefono: phone,
+        email: email,
+        direccion: location,
+        punto_de_venta_id: point_of_sale
+    };
+    const [updatedRow] = await Employee.update({ ...employeeData }, { where: { id } });
+    return updatedRow;
+}
+
 module.exports = {
-    createEmployee
+    createEmployee,
+    updateEmployee
 };

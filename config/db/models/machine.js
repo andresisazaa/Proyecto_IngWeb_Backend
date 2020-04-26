@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         venta_id: {
             type: DataTypes.INTEGER(11),
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'Venta',
                 key: 'id'

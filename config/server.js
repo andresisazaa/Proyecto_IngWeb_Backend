@@ -17,7 +17,7 @@ const server = (app) => {
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(morgan(morganMode));
     app.use(cors());
-    app.use(isAuth);
+    //app.use(isAuth);
     app.use('/', routes);
 
     app.get('/', (req, res) => {
