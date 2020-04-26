@@ -7,11 +7,11 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         nombre_modelo: {
-            type: DataTypes.STRING(20),
+            type: DataTypes.STRING(50),
             allowNull: false
         },
         descripcion: {
-            type: DataTypes.STRING(20),
+            type: DataTypes.STRING(255),
             allowNull: true
         },
         marca_id: {
