@@ -7,7 +7,7 @@ const createEmployee = async (req, res) => {
     try {
         if(body.name, body.email){
             const employee = await Employee.createEmployee(body);
-            const signup = await register(employee)
+            const signup = await register(employee);
             if(signup){
                 const sendedMail = sendPasswordResetLink(employee);
                 if(sendedMail){
@@ -61,7 +61,66 @@ const updateEmployee = async (req, res) => {
     }
 }
 
+const getEmployees = async (_, res) => {    
+    try {
+        const employees = await Employee.getEmployees();
+        return res
+                .status(httpStatus.OK)
+                .send(employees);
+    } catch (error) {
+        console.error(error);
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({ message: 'Ocurrió un error interno' });
+    }
+}
+
+const getEmployeeById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const employee = await Employee.getEmployeeById(id);
+        if (employee) {
+            return res
+                .status(httpStatus.OK)
+                .send(employee);
+        } else {
+            return res
+                .status(httpStatus.NOT_FOUND)
+                .send({ message: 'No se encontró el empleado' });
+        }
+    } catch (error) {
+        console.error(error);
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({ message: 'Ocurrió un error interno' });
+    }
+}
+
+const deleteEmployee = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const wasDeleted = await Employee.deleteEmployee(id);
+        if (wasDeleted) {
+            return res
+                .status(httpStatus.OK)
+                .send({ message: 'Empleado borrado correctamente' });
+        } else {
+            return res
+                .status(httpStatus.NOT_FOUND)
+                .send({ message: 'Empleado no encontrado' });
+        }
+    } catch (error) {
+        console.error(error);
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({ message: 'Ocurrió un error interno' });
+    }
+}
+
 module.exports = {
     createEmployee,
-    updateEmployee
+    updateEmployee,
+    getEmployees,
+    getEmployeeById,
+    deleteEmployee
 };
