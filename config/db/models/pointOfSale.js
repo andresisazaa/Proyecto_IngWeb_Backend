@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true
         },
         nombre_pdv: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING(50),
             allowNull: false
         },
         direccion: {
