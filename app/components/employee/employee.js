@@ -17,7 +17,8 @@ const createEmployee = async (body) => {
     const employeeFormatted = {
         id: newEmployee.dataValues.id,
         name: newEmployee.dataValues.nombre,
-        email: newEmployee.dataValues.email
+        email: newEmployee.dataValues.email,
+        cargo_id: newEmployee.dataValues.cargo_id
     };
     return employeeFormatted;
 }

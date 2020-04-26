@@ -25,8 +25,7 @@ const register = async (employee) => {
     const password = generateRandomPassword(5,3,2);
     return new Promise((resolve, reject) => {
         admin.auth().createUser({
-            id: employee.id,
-            name: employee.name,
+            uid: `${employee.id}-${employee.cargo_id}`,
             email: employee.email,
             password
         })

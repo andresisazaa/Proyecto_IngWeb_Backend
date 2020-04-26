@@ -11,7 +11,12 @@ const isAuth = async (req, res, next) => {
     try {
         const token = req.headers.authorization;
         const decodedToken = await admin.auth().verifyIdToken(token);
-        console.log('decodedToken', decodedToken);
+        let infoUser = decodedToken.uid.split('-');
+        res.locals.currentUser = {
+            email: decodedToken.email,
+            id: infoUser[0],
+            cargo: infoUser[1]
+        };
         next();
     } catch (error) {
         console.error(error.message);
