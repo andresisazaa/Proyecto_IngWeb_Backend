@@ -68,17 +68,45 @@ const updateMachineById = async (req, res) => {
         if (wasUpdated) {
             return res
                 .status(httpStatus.OK)
-                .send({ message: "Machineo actualizado correctamente" });
+                .send({ message: "Máquina actualizada correctamente" });
         } else {
             return res
                 .status(httpStatus.OK)
-                .send({ message: "No se ha actualizado ningún campo del modelo" });
+                .send({ message: "No se ha actualizado ningún campo de la máquina" });
         }
 
     } catch (error) {
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
-            .send({ message: 'No se pudo obtener la información de las marcas' });
+            .send({ message: 'No se pudo actualizar la máquina' });
+    }
+}
+
+const updateMachines = async (req, res) => {
+    const {status, machineIds} = req.body;
+
+    if (!status || machineIds.length === 0) {
+        return res
+            .status(httpStatus.BAD_REQUEST)
+            .send({ message: 'Parámetros incorrectos' });
+    }
+
+    try {
+        const result = await Machine.updateMachines(req.body.status, req.body.machineIds);
+
+        if (result) {
+            return res
+            .status(httpStatus.OK)
+            .send(result);
+        } else {
+            return res
+            .status(httpStatus.OK)
+            .send({message: "No se puede cambiar el status ni crear la informacion en estado por máquina"});
+        }
+    } catch (error) {
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({ message: 'No se pudo actualizar la máquina y sus estados' });
     }
 }
 
@@ -86,5 +114,6 @@ module.exports = {
     getAllMachines,
     getMachineById,
     createMachine,
-    updateMachineById
+    updateMachineById,
+    updateMachines
 }

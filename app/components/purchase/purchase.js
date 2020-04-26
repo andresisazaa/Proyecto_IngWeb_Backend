@@ -1,15 +1,15 @@
 const Util = require('./purchaseUtil');
 const MachineModel = require('../machine/machine');
 const db = require("../../../config/db/sequelize");
+const StatusPerMachineModel = require('../statusPerMachine/statusPerMachine');
+
 let Purchase = require("../../../config/db/models/purchase");
 let Employee = require("../../../config/db/models/employee");
 let Provider = require("../../../config/db/models/provider");
-let StatusPerMachine = require("../../../config/db/models/statusPerMachine");
 
 Purchase = Purchase(db.sequelize, db.Sequelize);
 Employee = Employee(db.sequelize, db.Sequelize);
 Provider = Provider(db.sequelize, db.Sequelize);
-StatusPerMachine = StatusPerMachine(db.sequelize, db.Sequelize);
 
 
 Employee.hasMany(Purchase, { foreignKey: "empleado_id" });
@@ -76,17 +76,6 @@ const setPurchaseValue = async (machines, purchaseId) => {
     return await purchase.save();
 }
 
-const setMachinesStatuses = async (machines, purchaseDate) => {
-    const machinesIds = machines.map(machine => machine.id);
-    const statuses = machinesIds.map(id => ({
-        estado_id: 1,
-        maquina_id: id,
-        fecha: purchaseDate
-    }));
-    const createdStatuses = await StatusPerMachine.bulkCreate(statuses);
-    return createdStatuses;
-}
-
 const createPurchase = async (employee, purchaseData) => {
     const { providerId, machines } = purchaseData;
     const date = Util.getDate();
@@ -106,7 +95,7 @@ const createPurchase = async (employee, purchaseData) => {
         purchaseId: purchaseId
     }
     const createdMachines = await MachineModel.createMachines(requiredData, machines);
-    const statuses = await setMachinesStatuses(createdMachines, date);
+    const statuses = await StatusPerMachineModel.createMachinesStatuses(createdMachines, date, 1);
     const updatedPurchase = await setPurchaseValue(createdMachines, purchaseId);
     return updatedPurchase;
 }

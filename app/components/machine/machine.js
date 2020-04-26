@@ -5,6 +5,9 @@ let Model = require("../../../config/db/models/model");
 let PointOfSale = require("../../../config/db/models/pointOfSale");
 let StatusPerMachine = require("../../../config/db/models/statusPerMachine");
 let Status = require("../../../config/db/models/status");
+const StatusPerMachineModel = require("../statusPerMachine/statusPerMachine");
+const util = require("../purchase/purchaseUtil");
+
 //let Sale = require("../../../config/db/models/sale");
 
 Machine = Machine(db.sequelize, db.Sequelize);
@@ -42,7 +45,7 @@ const getAllMachines = async () => {
     ],
   });
 
-  const machinesFormatted = machines.map(machine => ({
+  const machinesFormatted = machines.map((machine) => ({
     id: machine.id,
     type: machine.tipo,
     purchaseValue: machine.valor_compra,
@@ -59,7 +62,7 @@ const getAllMachines = async () => {
       name: machine.Punto_de_Ventum.nombre_pdv,
       address: machine.Punto_de_Ventum.direccion,
     },
-    statuses: machine.Estado_por_Maquinas.map(state => ({
+    statuses: machine.Estado_por_Maquinas.map((state) => ({
       id: state.Estado.id,
       date: state.fecha,
       name: state.Estado.nombre_estado,
@@ -97,7 +100,7 @@ const getMachineById = async (id) => {
       name: machine.Punto_de_Ventum.nombre_pdv,
       address: machine.Punto_de_Ventum.direccion,
     },
-    statuses: machine.Estado_por_Maquinas.map(state => ({
+    statuses: machine.Estado_por_Maquinas.map((state) => ({
       id: state.Estado.id,
       date: state.fecha,
       name: state.Estado.nombre_estado,
@@ -107,20 +110,48 @@ const getMachineById = async (id) => {
 };
 
 const createMachines = async (requireData, machines) => {
-  const machinesData = machines.map(machine => ({
+  const machinesData = machines.map((machine) => ({
     tipo: machine.type,
     valor_compra: machine.purchaseValue,
     modelo_id: machine.modelId,
     compra_id: requireData.purchaseId,
-    punto_de_venta_id: requireData.posId
+    punto_de_venta_id: requireData.posId,
   }));
   const newMachines = await Machine.bulkCreate(machinesData);
+
   return newMachines;
-  //{type: 'nueva', purchaseValue: 400000, modelId: 5}
-}
+};
+const updateMachines = async (status, machinesId) => {
+  const date = util.getDate();
+
+  const machinesFormatted = machinesId.map((id) => ({
+      id
+  }));
+
+  const result = await StatusPerMachineModel.createMachinesStatuses(
+    machinesFormatted,
+    date,
+    status
+  );
+  return result;
+};
+
+const updateMachineById = async (id, machineData) => {
+  const { type, posId, saleValue, modelId } = machineData;
+  const machine = {
+    tipo: type,
+    punto_de_venta_id: posId,
+    valor_venta: saleValue,
+    modelo_id: modelId
+  };
+  const [row] = await Machine.update({ ...machine }, { where: { id } });
+  return row;
+};
 
 module.exports = {
   getAllMachines,
   getMachineById,
-  createMachines
+  createMachines,
+  updateMachines,
+  updateMachineById
 };
