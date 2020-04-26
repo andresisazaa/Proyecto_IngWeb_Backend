@@ -2,15 +2,13 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const routes = require('../app/routes');
-const { port, morganMode } = require('./config');
 const isAuth = require('../app/middlewares/auth/isAuth');
+const { port, morganMode } = require('./config');
+const { initializeFirebaseApp } = require('./firebase/index');
 const admin = require('firebase-admin');
 const serviceAccount = require('../config/firebase/serviceAccountKey.json');
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://proyecto-ing-web.firebaseio.com"
-});
+initializeFirebaseApp()
 
 const server = (app) => {
     app.disable('x-powered-by');
