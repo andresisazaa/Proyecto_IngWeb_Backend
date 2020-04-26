@@ -19,7 +19,7 @@ const sendEmail = (employee, link) => {
         });
     
         const mailOptions = {
-            from: `no-reply <${emailSender.auth.user}>`, // Something like: Jane Doe <janedoe@gmail.com>
+            from: `no-reply <${emailSender}>`, // Something like: Jane Doe <janedoe@gmail.com>
             to: employee.email,
             subject: `Create password`,
             html: `<p style="font-size: 16px;">${link}</p>`

@@ -11,7 +11,7 @@ const initializeFirebaseApp = () => {
 }
 
 const sendPasswordResetLink = async (employee) => {
-    admin.auth().generatePasswordResetLink(email)
+    admin.auth().generatePasswordResetLink(employee.email)
         .then(async (link) => {
             return await sendEmail(employee, link)
         })
