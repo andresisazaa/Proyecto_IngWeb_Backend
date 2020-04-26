@@ -14,37 +14,41 @@ PointOfSale.hasMany(Employee, {foreignKey: 'punto_de_venta_id'});
 Employee.belongsTo(PointOfSale, {foreignKey: 'punto_de_venta_id'});
 
 
-const createEmployee = async (body) => {
+const createEmployee = async (employeeData) => {
+
     const newEmployee = await Employee.create({
-        nombre: body.name,
-        documento: body.document,
-        telefono: body.phone || null,
-        email: body.email,
-        direccion: body.location || null,
-        cargo_id: body.job_id,
-        punto_de_venta_id: body.point_of_sale
+        nombre: employeeData.name,
+        documento: employeeData.document,
+        telefono: employeeData.phone,
+        email: employeeData.email,
+        direccion: employeeData.address,
+        cargo_id: employeeData.jobId,
+        punto_de_venta_id: employeeData.posId
     });
 
     const employeeFormatted = {
-        id: newEmployee.dataValues.id,
-        name: newEmployee.dataValues.nombre,
-        email: newEmployee.dataValues.email
+        id: newEmployee.id,
+        name: newEmployee.nombre,
+        email: newEmployee.email
     };
+
     return employeeFormatted;
 }
 
-const updateEmployee = async (id, body) => {
-    const { name, document, phone, email, location, point_of_sale, enabled } = body;
-    const employeeData = {
+const updateEmployee = async (id, employeeData) => {
+    const { name, document, phone, email, address, posId, enabled } = employeeData;
+
+    const employee = {
         nombre: name,
         documento: document,
         telefono: phone,
         email: email,
-        direccion: location,
-        punto_de_venta_id: point_of_sale,
+        direccion: address,
+        punto_de_venta_id: posId,
         habilitado: enabled
     };
-    const [updatedRow] = await Employee.update({ ...employeeData }, { where: { id } });
+    const [updatedRow] = await Employee.update({ ...employee }, { where: { id } });
+
     return updatedRow;
 }
 
@@ -52,27 +56,29 @@ const getEmployees = async () => {
     const employees = await Employee.findAll({
         include: [ Job, PointOfSale ]
     });
+
     const employeesFormatted = employees.map(employee => {
         return {
-            id: employee.dataValues.id,
-            name: employee.dataValues.nombre,
-            document: employee.dataValues.documento,
-            phone: employee.dataValues.telefono,
-            email: employee.dataValues.email,
-            location: employee.dataValues.direccion,
+            id: employee.id,
+            name: employee.nombre,
+            document: employee.documento,
+            phone: employee.telefono,
+            email: employee.email,
+            address: employee.direccion,
+            enabled: employee.habilitado,
             job: {
-                id: employee.dataValues.cargo_id,
+                id: employee.cargo_id,
                 name: employee.Cargo.nombre_cargo,
                 salary: employee.Cargo.salario
             },
-            point_of_sale: {
-                id: employee.dataValues.punto_de_venta_id,
+            pointOfSale: {
+                id: employee.punto_de_venta_id,
                 name: employee.Punto_de_Ventum.nombre_pdv,
-                location: employee.Punto_de_Ventum.direccion
-            },
-            enabled: employee.dataValues.habilitado
+                address: employee.Punto_de_Ventum.direccion
+            }
         };
     });
+
     return employeesFormatted;
 }
 
@@ -82,25 +88,27 @@ const getEmployeeById = async (id) => {
         include: [ Job, PointOfSale ]
     });
     if(!employee) return null;
+
     const employeeFormatted = {
-        id: employee.dataValues.id,
-        name: employee.dataValues.nombre,
-        document: employee.dataValues.documento,
-        phone: employee.dataValues.telefono,
-        email: employee.dataValues.email,
-        location: employee.dataValues.direccion,
+        id: employee.id,
+        name: employee.nombre,
+        document: employee.documento,
+        phone: employee.telefono,
+        email: employee.email,
+        address: employee.direccion,
+        enabled: employee.habilitado,
         job: {
-            id: employee.dataValues.cargo_id,
+            id: employee.cargo_id,
             name: employee.Cargo.nombre_cargo,
             salary: employee.Cargo.salario
         },
-        point_of_sale: {
-            id: employee.dataValues.punto_de_venta_id,
+        pointOfSale: {
+            id: employee.punto_de_venta_id,
             name: employee.Punto_de_Ventum.nombre_pdv,
-            location: employee.Punto_de_Ventum.direccion
-        },
-        enabled: employee.dataValues.habilitado
+            address: employee.Punto_de_Ventum.direccion
+        }
     };
+
     return employeeFormatted;
 }
 

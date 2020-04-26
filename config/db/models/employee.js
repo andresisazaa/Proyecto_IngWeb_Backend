@@ -44,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         habilitado: {
             type: DataTypes.INTEGER(1),
-            allowNull: false
+            allowNull: false,
+            defaultValue: 1
         }
     }, {
         tableName: 'Empleado',
