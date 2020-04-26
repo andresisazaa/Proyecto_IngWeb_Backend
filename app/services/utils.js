@@ -3,7 +3,7 @@ const { emailSender } = require('../../config/config');
 const credentials = require('./auth/credentials.json').installed;
 const token = require('./auth/token.json');
 
-const sendEmail = (employee) => {
+const sendEmail = (employee, link) => {
     return new Promise ( (resolve, reject) => {
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
@@ -19,13 +19,10 @@ const sendEmail = (employee) => {
         });
     
         const mailOptions = {
-            from: `Prueba de email sender <${emailSender.auth.user}>`, // Something like: Jane Doe <janedoe@gmail.com>
+            from: `no-reply <${emailSender.auth.user}>`, // Something like: Jane Doe <janedoe@gmail.com>
             to: employee.email,
-            subject: `Hi ${employee.name} I\'M A PICKLE!!`, // email subject
-            html: `<p style="font-size: 16px;">Pickle Riiiiiiiiiiiiiiiick!!</p>
-                <br />
-                <img src="https://images.prod.meredith.com/product/fc8754735c8a9b4aebb786278e7265a5/1538025388228/l/rick-and-morty-pickle-rick-sticker" />
-            ` //
+            subject: `Create password`,
+            html: `<p style="font-size: 16px;">${link}</p>`
         };
     
         return transporter.sendMail(mailOptions, (error, info) => {
@@ -38,4 +35,20 @@ const sendEmail = (employee) => {
     })
 }
 
-module.exports = { sendEmail };
+const generateRandomPassword = (letters, numbers, either) => {
+    const chars = [
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+        "0123456789",
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+       ];
+       return [letters, numbers, either].map(function(len, i) {
+         return Array(len).fill(chars[i]).map(function(x) {
+           return x[Math.floor(Math.random() * x.length)];
+         }).join('');
+       }).concat().join('').split('').sort(function(){
+         return 0.5-Math.random();
+       }).join('')
+}
+
+
+module.exports = { sendEmail, generateRandomPassword };
