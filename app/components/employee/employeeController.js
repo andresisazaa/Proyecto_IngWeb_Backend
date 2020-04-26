@@ -3,33 +3,40 @@ const Employee = require('./employee');
 const { register, sendPasswordResetLink } = require('../../../config/firebase/index');
 
 const createEmployee = async (req, res) => {
-    const { body } = req;
+    const { name, document, email, jobId, posId } = req.body;
+
+    if (!name || !document || !email || !jobId || !posId) {
+        return res
+            .status(httpStatus.BAD_REQUEST)
+            .send({ message: 'Parámetros incorrectos' });
+    }
+
     try {
-        if(body.name, body.email){
-            const employee = await Employee.createEmployee(body);
-            const signup = await register(employee);
-            if(signup){
-                const sendedMail = sendPasswordResetLink(employee);
-                if(sendedMail){
-                    return res
-                        .status(httpStatus.CREATED)
-                        .send(employee),
-                        err => {
-                            console.error(err);
-                            return res
-                                .status(httpStatus.BAD_REQUEST)
-                                .send({ message: 'Error, datos incompletos' });
-                        }
-                    } else {
-                        return res
-                            .status(httpStatus.INTERNAL_SERVER_ERROR)
-                            .send({ message: 'Error al enviar el correo'})
-                    }
-            } else {
+        const employee = await Employee.createEmployee(req.body);
+        const signup = await register(employee);
+
+        if(signup){
+            const sendedMail = sendPasswordResetLink(employee);
+
+            if(sendedMail) {
                 return res
-                .status(httpStatus.INTERNAL_SERVER_ERROR)
-                .send({ message: 'Error al registrar al usuario'})
-            }
+                    .status(httpStatus.CREATED)
+                    .send(employee),
+                    err => {
+                        console.error(err);
+                        return res
+                            .status(httpStatus.BAD_REQUEST)
+                            .send({ message: 'Error, datos incompletos' });
+                    }
+                } else {
+                    return res
+                        .status(httpStatus.INTERNAL_SERVER_ERROR)
+                        .send({ message: 'Error al enviar el correo'})
+                }
+        } else {
+            return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({ message: 'Error al registrar al usuario'})
         }
     } catch (error) {
         console.error(error);
@@ -41,9 +48,9 @@ const createEmployee = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
     const { id } = req.params;
-    const { body } = req;
+
     try {
-        const wasUpdated = await Employee.updateEmployee(id, body);
+        const wasUpdated = await Employee.updateEmployee(id, req.body);
         if (wasUpdated) {
             return res
                 .status(httpStatus.OK)
@@ -77,8 +84,10 @@ const getEmployees = async (_, res) => {
 
 const getEmployeeById = async (req, res) => {
     const { id } = req.params;
+
     try {
         const employee = await Employee.getEmployeeById(id);
+        
         if (employee) {
             return res
                 .status(httpStatus.OK)
