@@ -34,14 +34,15 @@ const createEmployee = async (body) => {
 }
 
 const updateEmployee = async (id, body) => {
-    const { name, document, phone, email, location, point_of_sale } = body;
+    const { name, document, phone, email, location, point_of_sale, enabled } = body;
     const employeeData = {
         nombre: name,
         documento: document,
         telefono: phone,
         email: email,
         direccion: location,
-        punto_de_venta_id: point_of_sale
+        punto_de_venta_id: point_of_sale,
+        habilitado: enabled
     };
     const [updatedRow] = await Employee.update({ ...employeeData }, { where: { id } });
     return updatedRow;
@@ -68,7 +69,8 @@ const getEmployees = async () => {
                 id: employee.dataValues.punto_de_venta_id,
                 name: employee.Punto_de_Ventum.nombre_pdv,
                 location: employee.Punto_de_Ventum.direccion
-            }
+            },
+            enabled: employee.dataValues.habilitado
         };
     });
     return employeesFormatted;
@@ -96,7 +98,8 @@ const getEmployeeById = async (id) => {
             id: employee.dataValues.punto_de_venta_id,
             name: employee.Punto_de_Ventum.nombre_pdv,
             location: employee.Punto_de_Ventum.direccion
-        }
+        },
+        enabled: employee.dataValues.habilitado
     };
     return employeeFormatted;
 }

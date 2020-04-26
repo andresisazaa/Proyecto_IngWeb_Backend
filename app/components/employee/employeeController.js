@@ -51,7 +51,7 @@ const updateEmployee = async (req, res) => {
         } else {
             return res
                 .status(httpStatus.OK)
-                .send({ message: 'No se actualizó el cargo, la información es igual' });
+                .send({ message: 'No se actualizó el empleado, la información es igual' });
         }
     } catch (error) {
         console.error(error);

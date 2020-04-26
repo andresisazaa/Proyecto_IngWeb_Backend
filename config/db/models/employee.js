@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'Punto_de_Venta',
                 key: 'id'
             }
+        },
+        habilitado: {
+            type: DataTypes.INTEGER(1),
+            allowNull: false
         }
     }, {
         tableName: 'Empleado',

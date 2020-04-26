@@ -15,7 +15,9 @@ router.route('/')
 router.route('/:id')
     .get((req, res) => { controller.getEmployeeById(req, res) });
 
-router.route('/:id')
-    .delete((req, res) => { controller.deleteEmployee(req, res) });
+/*  No se expone la ruta de eliminar empleado ya que se opta por tener una
+    una columna de habilitarlo o no en la base de datos.
+ router.route('/:id')
+    .delete((req, res) => { controller.deleteEmployee(req, res) }); */
 
 module.exports = router;
