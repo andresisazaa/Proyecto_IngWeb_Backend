@@ -10,8 +10,8 @@ const createBrand = async (body) => {
     });
 
     const brandFormatted = {
-        id: newBrand.dataValues.id,
-        brandName: newBrand.dataValues.nombre_marca
+        id: newBrand.id,
+        brandName: newBrand.nombre_marca
     };
     return brandFormatted;
 }
@@ -20,8 +20,8 @@ const getBrands = async () => {
     const brands = await Brand.findAll();
     const brandsFormatted = brands.map(brand => {
         return {
-            id: brand.dataValues.id,
-            brandName: brand.dataValues.nombre_marca
+            id: brand.id,
+            brandName: brand.nombre_marca
         };
     });
     return brandsFormatted;
@@ -31,8 +31,8 @@ const getBrandById = async (id) => {
     const brand = await Brand.findByPk(id);
     if (!brand) return null;
     const brandFormatted = {
-        id: brand.dataValues.id,
-        brandName: brand.dataValues.nombre_marca
+        id: brand.id,
+        brandName: brand.nombre_marca
     };
     return brandFormatted;
 }

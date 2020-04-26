@@ -4,17 +4,10 @@ const Brand = require('./brand');
 const getBrands = async (req, res) => {
     try {
         const brands = await Brand.getBrands();
-        if (brands.length > 0) {
-            return res
-                .status(httpStatus.OK)
-                .send(brands);
-        } else if (brands.length === 0) {
-            return res
-                .status(httpStatus.NOT_FOUND)
-                .send({ message: 'No se encontraron marcas' });
-        }
+        return res
+            .status(httpStatus.OK)
+            .send(brands);
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo obtener la información de las marcas' });
@@ -43,20 +36,19 @@ const getBrandById = async (req, res) => {
 }
 
 const createBrand = async (req, res) => {
-    const { body } = req;
+    const { brandName } = req.body;
+    if (!brandName) {
+        return res
+            .status(httpStatus.BAD_REQUEST)
+            .send({ message: 'Parámetros incompletos' });
+    }
+
     try {
-        const brand = await Brand.createBrand(body);
+        const brand = await Brand.createBrand(req.body);
         return res
             .status(httpStatus.CREATED)
-            .send(brand),
-            err => {
-                console.error(err);
-                return res
-                    .status(httpStatus.BAD_REQUEST)
-                    .send({ message: 'Error, datos incompletos' });
-            }
+            .send(brand);
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo crear la marca' });
@@ -78,7 +70,6 @@ const updateBrand = async (req, res) => {
                 .send({ message: 'No se actualizó la marca, la información es igual' });
         }
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'Ocurrió un error interno' });
@@ -99,7 +90,6 @@ const deleteBrand = async (req, res) => {
                 .send({ message: 'Marca no encontrada' });
         }
     } catch (error) {
-        console.error(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'Ocurrió un error interno' });

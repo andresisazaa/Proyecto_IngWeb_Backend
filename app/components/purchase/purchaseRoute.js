@@ -9,4 +9,7 @@ router.route('/')
 router.route('/:id')
     .get(controller.getPurchaseById);
 
+router.route('/')
+    .post(controller.createPurchase);
+
 module.exports = router;

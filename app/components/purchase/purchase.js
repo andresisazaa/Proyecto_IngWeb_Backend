@@ -1,11 +1,16 @@
+const Util = require('./purchaseUtil');
+const MachineModel = require('../machine/machine');
 const db = require("../../../config/db/sequelize");
+const StatusPerMachineModel = require('../statusPerMachine/statusPerMachine');
+
 let Purchase = require("../../../config/db/models/purchase");
 let Employee = require("../../../config/db/models/employee");
-let Provider = require("../../../config/db/models/provider")
+let Provider = require("../../../config/db/models/provider");
 
 Purchase = Purchase(db.sequelize, db.Sequelize);
 Employee = Employee(db.sequelize, db.Sequelize);
 Provider = Provider(db.sequelize, db.Sequelize);
+
 
 Employee.hasMany(Purchase, { foreignKey: "empleado_id" });
 Purchase.belongsTo(Employee, { foreignKey: "empleado_id" });
@@ -16,7 +21,7 @@ Purchase.belongsTo(Provider, { foreignKey: "proveedor_id" });
 //{model: Employee, where: {id: 1}}
 
 const getAllPurchases = async () => {
-    const purchases = await Purchase.findAll({include: [Employee, Provider]});
+    const purchases = await Purchase.findAll({ include: [Employee, Provider] });
 
     const purchasesFormatted = purchases.map((purchase) => ({
         id: purchase.id,
@@ -38,7 +43,7 @@ const getAllPurchases = async () => {
 }
 
 const getPurchaseById = async (id) => {
-    const purchase = await Purchase.findByPk(id, {include: [Employee, Provider]});
+    const purchase = await Purchase.findByPk(id, { include: [Employee, Provider] });
 
     if (!purchase) return null;
 
@@ -61,7 +66,42 @@ const getPurchaseById = async (id) => {
     return purchaseFormatted;
 }
 
+const setPurchaseValue = async (machines, purchaseId) => {
+    const value = Util.calculatePurchaseValue(machines);
+    let purchase = await Purchase.findByPk(purchaseId);
+    if (!purchase) {
+        throw new Error('No se pudo obtener');
+    }
+    purchase.valor_compra = value;
+    return await purchase.save();
+}
+
+const createPurchase = async (employee, purchaseData) => {
+    const { providerId, machines } = purchaseData;
+    const date = Util.getDate();
+    const purchase = await Purchase.create({
+        valor_compra: 0,
+        fecha: date,
+        proveedor_id: providerId,
+        empleado_id: employee.id
+    });
+    if (!purchase) {
+        throw new Error('Ocurrió un error creando la compra');
+    }
+    const { id: purchaseId } = purchase;
+    const requiredData = {
+        id: employee.id,
+        posId: employee.posId,
+        purchaseId: purchaseId
+    }
+    const createdMachines = await MachineModel.createMachines(requiredData, machines);
+    const statuses = await StatusPerMachineModel.createMachinesStatuses(createdMachines, date, 1);
+    const updatedPurchase = await setPurchaseValue(createdMachines, purchaseId);
+    return updatedPurchase;
+}
+
 module.exports = {
     getAllPurchases,
-    getPurchaseById
+    getPurchaseById,
+    createPurchase
 }
