@@ -4,8 +4,8 @@ const Employee = require('../../components/employee/employee');
 const infoUser = async (_, res, next) => {
 
     try {
-        const user = await Employee.getEmployeeById(res.locals.infoCurrentUser.id);        
-        if(!user) {
+        const user = await Employee.getEmployeeById(res.locals.infoCurrentUser.id);
+        if(!user || !user.enabled) {
             return res
             .status(httpStatus.UNAUTHORIZED)
             .send({ message: 'No estás autorizado' })
