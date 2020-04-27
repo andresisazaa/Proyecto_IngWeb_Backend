@@ -4,9 +4,10 @@ let Brand = require('../../../config/db/models/brand');
 Brand = Brand(db.sequelize, db.Sequelize);
 
 const createBrand = async (body) => {
-    const { brandName } = body;
+    const { brandName, brandLogo } = body;
     const newBrand = await Brand.create({
-        nombre_marca: brandName
+        nombre_marca: brandName,
+        logo_url: brandLogo
     });
 
     const brandFormatted = {
@@ -21,7 +22,8 @@ const getBrands = async () => {
     const brandsFormatted = brands.map(brand => {
         return {
             id: brand.id,
-            brandName: brand.nombre_marca
+            brandName: brand.nombre_marca,
+            brandLogo: brand.logo_url
         };
     });
     return brandsFormatted;
@@ -32,7 +34,8 @@ const getBrandById = async (id) => {
     if (!brand) return null;
     const brandFormatted = {
         id: brand.id,
-        brandName: brand.nombre_marca
+        brandName: brand.nombre_marca,
+        brandLogo: brand.logo_url
     };
     return brandFormatted;
 }

@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
         nombre_marca: {
             type: DataTypes.STRING(20),
             allowNull: false
+        },
+        logo_url: {
+            type: DataTypes.STRING(255),
+            allowNull: true
         }
     }, {
         tableName: 'Marca',
