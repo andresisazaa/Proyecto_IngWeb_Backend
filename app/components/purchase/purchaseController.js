@@ -41,8 +41,11 @@ const getPurchaseById = async (req, res) => {
 
 const createPurchase = async (req, res) => {
     const { providerId, machines } = req.body;
-    const { employee } = req.body; // implementar
-    // email, role, pdv, id
+    const employee = {
+        id: res.locals.infoCurrentUser.id,
+        posId: res.locals.infoCurrentUser.job.id,
+    }
+    
     if (!providerId || machines.length === 0) {
         return res
             .status(httpStatus.BAD_REQUEST)
