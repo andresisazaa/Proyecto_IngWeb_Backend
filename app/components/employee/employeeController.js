@@ -12,6 +12,12 @@ const createEmployee = async (req, res) => {
     }
 
     try {
+        const registeredEmployee = await Employee.getEmployeeByEmail(email);
+        if(registeredEmployee) {
+            return res
+                .status(httpStatus.BAD_REQUEST)
+                .send({ message: `Error, el usuario con el correo '${email}' ya ha sido creado` });
+        }        
         const employee = await Employee.createEmployee(req.body);
         const signup = await register(employee);
 

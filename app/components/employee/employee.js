@@ -36,7 +36,7 @@ const createEmployee = async (employeeData) => {
 }
 
 const updateEmployee = async (id, employeeData) => {
-    const { name, document, phone, email, address, posId, enabled } = employeeData;
+    const { name, document, phone, email, address, posId, jobId, enabled } = employeeData;
 
     const employee = {
         nombre: name,
@@ -45,6 +45,7 @@ const updateEmployee = async (id, employeeData) => {
         email: email,
         direccion: address,
         punto_de_venta_id: posId,
+        cargo_id: jobId,
         habilitado: enabled
     };
     const [updatedRow] = await Employee.update({ ...employee }, { where: { id } });
@@ -112,6 +113,13 @@ const getEmployeeById = async (id) => {
     return employeeFormatted;
 }
 
+const getEmployeeByEmail = async (email) => {
+
+    const employee = await Employee.findOne({ where: { email: email }});
+    if(!employee) return null;
+    return employee;
+}
+
 const deleteEmployee = async (id) => {
     const deletedRow = await Employee.destroy({ where: { id } });
     return deletedRow;
@@ -122,5 +130,6 @@ module.exports = {
     updateEmployee,
     getEmployees,
     getEmployeeById,
-    deleteEmployee
+    deleteEmployee,
+    getEmployeeByEmail
 };
