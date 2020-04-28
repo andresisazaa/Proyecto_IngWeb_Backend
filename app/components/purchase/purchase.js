@@ -6,17 +6,34 @@ const StatusPerMachineModel = require('../statusPerMachine/statusPerMachine');
 let Purchase = require("../../../config/db/models/purchase");
 let Employee = require("../../../config/db/models/employee");
 let Provider = require("../../../config/db/models/provider");
+let Machine = require("../../../config/db/models/machine");
+let Model = require("../../../config/db/models/model");
+let Brand = require("../../../config/db/models/brand");
 
 Purchase = Purchase(db.sequelize, db.Sequelize);
 Employee = Employee(db.sequelize, db.Sequelize);
 Provider = Provider(db.sequelize, db.Sequelize);
-
+Machine = Machine(db.sequelize, db.Sequelize);
+Model = Model(db.sequelize, db.Sequelize);
+Brand = Brand(db.sequelize, db.Sequelize);
 
 Employee.hasMany(Purchase, { foreignKey: "empleado_id" });
 Purchase.belongsTo(Employee, { foreignKey: "empleado_id" });
 
 Provider.hasMany(Purchase, { foreignKey: "proveedor_id" });
 Purchase.belongsTo(Provider, { foreignKey: "proveedor_id" });
+
+Provider.hasMany(Purchase, { foreignKey: "proveedor_id" });
+Purchase.belongsTo(Provider, { foreignKey: "proveedor_id" });
+
+Purchase.hasMany(Machine, { foreignKey: "compra_id" });
+Machine.belongsTo(Purchase, { foreignKey: "compra_id" });
+
+Model.hasMany(Machine, { foreignKey: "modelo_id" });
+Machine.belongsTo(Model, { foreignKey: "modelo_id" });
+
+Brand.hasMany(Model, { foreignKey: "marca_id" });
+Model.belongsTo(Brand, { foreignKey: "marca_id" });
 
 //{model: Employee, where: {id: 1}}
 
@@ -43,7 +60,23 @@ const getAllPurchases = async () => {
 }
 
 const getPurchaseById = async (id) => {
-    const purchase = await Purchase.findByPk(id, { include: [Employee, Provider] });
+    const purchase = await Purchase.findByPk(id, {
+        include: [Employee, Provider, { model: Machine,
+            include: [{ model: Model, include: Brand }] 
+        }] 
+    });
+    const machines = purchase.Maquinas.map(machine => {
+        return {
+            id: machine.id,
+            type: machine.tipo,
+            purchaseValue: machine.valor_compra,
+            model: {
+                id: machine.Modelo.id,
+                name: machine.Modelo.nombre_modelo,
+                brand: machine.Modelo.Marca.nombre_marca
+            }
+        }
+    })
 
     if (!purchase) return null;
 
@@ -61,7 +94,8 @@ const getPurchaseById = async (id) => {
             id: purchase.Proveedor.id,
             businessName: purchase.Proveedor.razon_social,
             nit: purchase.Proveedor.nit
-        }
+        },
+        machines: machines
     }
     return purchaseFormatted;
 }
