@@ -38,9 +38,9 @@ const getProviderById = async (req, res) => {
 }
 
 const createProvider = async (req, res) => {
-    const { body } = req.body;
+    const { businessName, nit, email } = req.body;
 
-    if (!body) {
+    if (!businessName || !nit || !email) {
         return res
             .status(httpStatus.BAD_REQUEST)
             .send({ message: 'Parámetros incorrectos' });

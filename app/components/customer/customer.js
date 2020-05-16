@@ -9,7 +9,7 @@ const getAllCustomers = async () => {
     const customersFormatted = customers.map((customer) => ({
         id: customer.id,
         name: customer.nombre,
-        identification: customer.identificacion,
+        document: customer.documento,
         number: customer.telefono,
         email: customer.email,
         address: customer.direccion
@@ -26,7 +26,7 @@ const getCustomerById = async (id) => {
     const customerFormatted = {
         id: customer.id,
         name: customer.nombre,
-        identification: customer.identificacion,
+        document: customer.documento,
         number: customer.telefono,
         email: customer.email,
         address: customer.direccion
@@ -36,11 +36,11 @@ const getCustomerById = async (id) => {
 }
 
 const createCustomer = async (customerData) => {
-    const {name, identification, number, email, address} = customerData;
+    const {name, document, number, email, address} = customerData;
 
     const customer = await Customer.create({
         nombre: name,
-        identificacion: identification,
+        documento: document,
         telefono: number,
         email: email,
         direccion: address
@@ -49,7 +49,7 @@ const createCustomer = async (customerData) => {
     const customerFormatted = {
         id: customer.id,
         name: customer.nombre,
-        identification: customer.identificacion,
+        document: customer.documento,
         number: customer.telefono,
         email: customer.email,
         address: customer.direccion
@@ -59,11 +59,11 @@ const createCustomer = async (customerData) => {
 }
 
 const updateCustomerById = async (id, customerData) => {
-    const {name, identification, number, email, address} = customerData;
+    const {name, document, number, email, address} = customerData;
     
     const customer = {
         nombre: name,
-        identificacion: identification,
+        documento: document,
         telefono: number,
         email: email,
         direccion: address

@@ -38,9 +38,9 @@ const getCustomerById = async (req, res) => {
 }
 
 const createCustomer = async (req, res) => {
-    const { body } = req.body;
+    const { name, document, email } = req.body;
 
-    if(!body) {
+    if(!name || !document || !email) {
         return res
             .status(httpStatus.BAD_REQUEST)
             .send({ message: 'Parámetros incorrectos' });
