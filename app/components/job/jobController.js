@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
 const Job = require('./job');
+const { getPermissions } = require('../../../config/firebase/index')
+
 
 const getJobs = async (req, res) => {
     try {

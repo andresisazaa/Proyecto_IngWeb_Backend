@@ -1,5 +1,10 @@
 const httpStatus = require('http-status');
 const Brand = require('./brand');
+const { getPermissions} = require('../../../config/firebase/index')
+
+const validateScope = async(req, res) => {
+
+}
 
 const getBrands = async (req, res) => {
     try {

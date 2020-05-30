@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
 const Model = require('./model');
+const { getPermissions } = require('../../../config/firebase/index')
+
 
 const getAllModels = async (req, res) => {
     try {

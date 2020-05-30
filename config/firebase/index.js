@@ -21,7 +21,7 @@ const sendPasswordResetLink = async (employee) => {
 }
 
 const register = async (employee) => {
-    const password = generateRandomPassword(5,3,2);
+    const password = generateRandomPassword(5, 3, 2);
     return new Promise((resolve, reject) => {
         admin.auth().createUser({
             uid: `${employee.id}`,
@@ -38,4 +38,20 @@ const register = async (employee) => {
     })
 }
 
-module.exports = { initializeFirebaseApp, sendPasswordResetLink, register }
+const getPermissions = (service) => {
+    let ref = admin.database().ref().child(service);
+    console.log(getPermissions.name)
+    var data;
+    // Attach an asynchronous callback to read the data at our posts reference
+    ref.on('value', function (snapshot) {
+        data = snapshot.val();
+    }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+    });
+    return data;
+}
+
+initializeFirebaseApp()
+getPermissions('Brand')
+
+module.exports = { initializeFirebaseApp, sendPasswordResetLink, register, getPermissions }

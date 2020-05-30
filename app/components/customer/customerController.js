@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Customer = require('./customer');
+const { getPermissions} = require('../../../config/firebase/index')
 
 const getAllCustomers = async (req, res) => {
     try {

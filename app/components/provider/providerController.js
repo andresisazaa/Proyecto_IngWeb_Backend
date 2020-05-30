@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Provider = require('./provider');
+const { getPermissions } = require('../../../config/firebase/index')
 
 const getAllProviders = async (req, res) => {
     try {
