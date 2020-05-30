@@ -9,10 +9,14 @@ const getAllMachines = async (req, res) => {
         posId: res.locals.infoCurrentUser.pointOfSale.id,
     }
 
-    const retrieveAvailable = req.query.available;
+    let status = req.query.status;
+
+    if(status != '1' && status != '2' && status!= '3') {
+        status = null;
+    }
 
     try {
-        const machines = await Machine.getAllMachines(employee.posId, retrieveAvailable);
+        const machines = await Machine.getAllMachines(employee.posId, status);
         return res
             .status(httpStatus.OK)
             .send(machines);
