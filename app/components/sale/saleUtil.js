@@ -1,16 +1,4 @@
-var Xlsx = require('xlsx');
 const machineService = require('../machine/machine');
-
-const arrayToExcel = array => {
-
-    let ws = Xlsx.utils.json_to_sheet(array);
-    let wb = Xlsx.utils.book_new();
-    Xlsx.utils.book_append_sheet(wb, ws, "Followres");
-    let wbout = Xlsx.write(wb, { bookType: 'xlsx', type: 'binary' });
-
-    return wbout;
-
-}
 
 const getDate = () => {
     let date = new Date();
@@ -53,11 +41,9 @@ const updateMachines = async (machines, saleId) => {
         let machineData = {saleId};
         await machineService.updateMachineById(machine.id, 3, machineData);
     }
-
 }
 
 module.exports = {
-    arrayToExcel,
     getDate,
     getMachines,
     calculateSaleValue,

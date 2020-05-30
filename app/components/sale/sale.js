@@ -1,5 +1,3 @@
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 const db = require("../../../config/db/sequelize");
 let Sale = require("../../../config/db/models/sale");
 let Employee = require("../../../config/db/models/employee");
@@ -31,37 +29,6 @@ Machine.belongsTo(Sale, { foreignKey: "venta_id" });
 
 Model.hasMany(Machine, { foreignKey: "modelo_id" });
 Machine.belongsTo(Model, { foreignKey: "modelo_id" });
-
-
-const getMonthlySalesReport = async () => {
-    let date = new Date();
-    let startDate = new Date(date.getFullYear(), date.getMonth(), 1);
-    let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-    let sales = await Sale.findAll({
-        where: {
-            fecha: { [Op.between]: [startDate, endDate] }
-        },
-        include: [{
-            model: Employee, include: [
-                PointOfSale
-            ]
-        }]
-    });
-
-    const formattedSales = sales.map(sale => ({
-        id: sale.id,
-        saleValue: sale.valor_venta,
-        date: sale.fecha,
-        pointOfSale: sale.Empleado.Punto_de_Ventum.nombre_pdv,
-        employee: {
-            document: sale.Empleado.documento,
-            name: sale.Empleado.nombre,
-            email: sale.Empleado.email
-        }
-    }));
-    return formattedSales;
-}
 
 const getAllSales = async () => {
     const sales = Sale.findAll({include: [
@@ -138,9 +105,7 @@ const createSale = async (customerId, machinesId, employeeId) => {
     return saleFormatted;
 }
 
-
 module.exports = {
-    getMonthlySalesReport: getMonthlySalesReport,
     getAllSales,
     getSaleById, 
     createSale

@@ -12,6 +12,7 @@ const employees = require('./components/employee/employeeRoute');
 const customers = require('./components/customer/customerRoute');
 const providers = require('./components/provider/providerRoute');
 const sales = require('./components/sale/saleRoute');
+const reports = require('./components/report/reportRoute');
 
 router.use('/brands', brands);
 router.use('/pos', pointsOfSale);
@@ -23,5 +24,6 @@ router.use('/employees', employees);
 router.use('/customers', customers);
 router.use('/providers', providers);
 router.use('/sales', sales);
+router.use('/reports', reports);
 
 module.exports = router;
