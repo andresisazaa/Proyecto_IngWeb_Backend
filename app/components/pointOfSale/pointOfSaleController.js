@@ -4,8 +4,8 @@ const { isValidScope } = require('../../services/utils')
 
 const component = 'PointOfSale';
 
-const getPointsOfSale = async (req, res) => {
-
+const getPointsOfSales = async (req, res) => {
+   if(!isValidScope(getPointsOfSale.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
   try {
     const pointsOfSale = await PointOfSale.getPointsOfSale();
     return res
@@ -22,6 +22,7 @@ const getPointsOfSale = async (req, res) => {
 };
 
 const getPointOfSaleById = async (req, res) => {
+   if(!isValidScope(getPointOfSaleById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
   const { id } = req.params;
 
   try {
@@ -41,6 +42,7 @@ const getPointOfSaleById = async (req, res) => {
 };
 
 const createPointOfSale = async (req, res) => {
+  if(!isValidScope(createPointOfSale.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
   const { address, posName } = req.body;
 
   if(!address || !posName) {
@@ -63,6 +65,7 @@ const createPointOfSale = async (req, res) => {
 };
 
 const updatePointOfSale = async (req, res) => {
+  if(!isValidScope(updatePointOfSale.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
   const { id } = req.params;
   
   try {
@@ -88,6 +91,7 @@ const updatePointOfSale = async (req, res) => {
 };
 
 const deletePointOfSale = async (req, res) => {
+  if(!isValidScope(deletePointOfSale.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
   const { id } = req.params;
   try {
     const wasDeleted = await PointOfSale.deletePointOfSale(id);
@@ -108,7 +112,7 @@ const deletePointOfSale = async (req, res) => {
 };
 
 module.exports = {
-  getPointsOfSale,
+  getPointsOfSales,
   getPointOfSaleById,
   createPointOfSale,
   updatePointOfSale,

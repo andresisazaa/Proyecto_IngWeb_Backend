@@ -40,7 +40,7 @@ const register = async (employee) => {
 
 const getPermissions = (component) => {
     let ref = admin.database().ref().child(component);
-    console.log(getPermissions.name)
+
     var data;
     // Attach an asynchronous callback to read the data at our posts reference
     ref.on('value', function (snapshot) {

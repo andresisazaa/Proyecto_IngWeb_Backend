@@ -5,6 +5,7 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Model';
 
 const getAllModels = async (req, res) => {
+     if(!isValidScope(getAllModels.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     try {
         const models = await Model.getAllModels();
         return res
@@ -19,6 +20,7 @@ const getAllModels = async (req, res) => {
 }
 
 const getModelById = async (req, res) => {
+     if(!isValidScope(getModelById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const {id} = req.params;
     try {
         const model = await Model.getModelById(id);
@@ -41,6 +43,7 @@ const getModelById = async (req, res) => {
 }
 
 const createModel = async (req, res) => {
+     if(!isValidScope(createModel.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const {modelName, brandId} = req.body;
 
     if (!modelName || !brandId) {
@@ -63,6 +66,7 @@ const createModel = async (req, res) => {
 }
 
 const updateModelById = async (req, res) => {
+     if(!isValidScope(updateModelById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { id } = req.params;
 
     try {

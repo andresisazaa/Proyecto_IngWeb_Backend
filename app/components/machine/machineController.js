@@ -5,7 +5,7 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Machine';
 
 const getAllMachines = async (req, res) => {
-
+     if(!isValidScope(getAllMachines.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     // Get pos Id to filter
     const employee = {
         id: res.locals.infoCurrentUser.id,
@@ -32,6 +32,7 @@ const getAllMachines = async (req, res) => {
 }
 
 const getMachineById = async (req, res) => {
+     if(!isValidScope(getMachineById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { id } = req.params;
     try {
         const machine = await Machine.getMachineById(id);
@@ -54,6 +55,7 @@ const getMachineById = async (req, res) => {
 }
 
 const createMachine = async (req, res) => {
+     if(!isValidScope(createMachine.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { modelName, brandId } = req.body;
 
     if (!modelName || !brandId) {
@@ -76,6 +78,7 @@ const createMachine = async (req, res) => {
 }
 
 const updateMachineById = async (req, res) => {
+     if(!isValidScope(updateMachineById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { id } = req.params;
 
     let { status } = req.body;

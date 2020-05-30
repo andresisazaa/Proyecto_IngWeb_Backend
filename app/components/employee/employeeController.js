@@ -5,6 +5,7 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Employee';
 
 const createEmployee = async (req, res) => {
+     if(!isValidScope(createEmployee.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { name, document, email, jobId, posId } = req.body;
 
     if (!name || !document || !email || !jobId || !posId) {
@@ -55,6 +56,7 @@ const createEmployee = async (req, res) => {
 }
 
 const updateEmployee = async (req, res) => {
+     if(!isValidScope(updateEmployee.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { id } = req.params;
 
     try {
@@ -77,6 +79,7 @@ const updateEmployee = async (req, res) => {
 }
 
 const getEmployees = async (_, res) => {    
+     if(!isValidScope(getEmployees.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     try {
         const employees = await Employee.getEmployees();
         return res
@@ -91,6 +94,7 @@ const getEmployees = async (_, res) => {
 }
 
 const getEmployeeById = async (req, res) => {
+     if(!isValidScope(getEmployeeById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { id } = req.params;
 
     try {
@@ -114,6 +118,7 @@ const getEmployeeById = async (req, res) => {
 }
 
 const deleteEmployee = async (req, res) => {
+     if(!isValidScope(deleteEmployee.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
     const { id } = req.params;
     try {
         const wasDeleted = await Employee.deleteEmployee(id);

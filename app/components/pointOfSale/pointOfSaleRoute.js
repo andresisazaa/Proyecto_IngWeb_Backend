@@ -4,7 +4,7 @@ const controller = require('./pointOfSaleController');
 const router = new Router();
 
 router.route('/')
-    .get((req, res) => { controller.getPointsOfSale(req, res) });
+    .get((req, res) => { controller.getPointsOfSales(req, res) });
 
 router.route('/:id')
     .get((req, res) => { controller.getPointOfSaleById(req, res) });
