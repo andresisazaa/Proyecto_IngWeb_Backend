@@ -2,8 +2,21 @@ const httpStatus = require('http-status');
 const Machine = require('./machine');
 
 const getAllMachines = async (req, res) => {
+
+    // Get pos Id to filter
+    const employee = {
+        id: res.locals.infoCurrentUser.id,
+        posId: res.locals.infoCurrentUser.pointOfSale.id,
+    }
+
+    let status = req.query.status;
+
+    if(status != '1' && status != '2' && status!= '3') {
+        status = null;
+    }
+
     try {
-        const machines = await Machine.getAllMachines();
+        const machines = await Machine.getAllMachines(employee.posId, status);
         return res
             .status(httpStatus.OK)
             .send(machines);
