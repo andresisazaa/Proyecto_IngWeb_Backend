@@ -6,4 +6,10 @@ const router = new Router();
 router.route('/report')
     .get(controller.getMonthlySalesReport);
 
+router.route('/:id')
+    .get(controller.getSaleById);
+
+router.route('/')
+    .get(controller.getAllSales);
+
 module.exports = router;

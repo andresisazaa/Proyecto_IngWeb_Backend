@@ -1,5 +1,6 @@
 
 const Sale = require('./sale');
+const httpStatus = require('http-status');
 const Xlsx = require('xlsx');
 
 
@@ -27,6 +28,35 @@ const getMonthlySalesReport = async (req, res) => {
     res.end(wbout, 'binary');
 }
 
+const getAllSales = async (req, res) => {
+    try {
+        const sales = await Sale.getAllSales()
+        return res
+            .status(httpStatus.OK)
+            .send(sales);
+    } catch (error) {
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({message: "No se pueden traer las ventas"});
+    }
+}
+
+const getSaleById = async (req, res) => {
+    const {id} = req.params;
+
+    try {
+        const sale = await Sale.getSaleById(id);
+        return res.status(httpStatus.OK).send(sale);
+    } catch (error) {
+        return res
+        .status(httpStatus.INTERNAL_SERVER_ERROR)
+        .send({message: "No se puede traer la venta"});
+        
+    }
+}
+
 module.exports = {
-    getMonthlySalesReport: getMonthlySalesReport
+    getMonthlySalesReport: getMonthlySalesReport,
+    getAllSales,
+    getSaleById
 }
