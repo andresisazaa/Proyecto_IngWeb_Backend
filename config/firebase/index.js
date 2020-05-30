@@ -51,7 +51,4 @@ const getPermissions = (component) => {
     return data;
 }
 
-initializeFirebaseApp()
-getPermissions('Brand')
-
 module.exports = { initializeFirebaseApp, sendPasswordResetLink, register, getPermissions }
