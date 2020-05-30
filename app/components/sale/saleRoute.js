@@ -12,4 +12,7 @@ router.route('/:id')
 router.route('/')
     .get(controller.getAllSales);
 
+router.route('/')
+    .post(controller.createSale);
+
 module.exports = router;

@@ -8,6 +8,8 @@ let Customer = require("../../../config/db/models/customer");
 let Machine = require("../../../config/db/models/machine");
 let Model = require("../../../config/db/models/model");
 
+const saleUtil = require('./saleUtil');
+
 Sale = Sale(db.sequelize, db.Sequelize);
 Employee = Employee(db.sequelize, db.Sequelize);
 PointOfSale = PointOfSale(db.sequelize, db.Sequelize);
@@ -81,7 +83,7 @@ const getAllSales = async () => {
 } 
 
 const getSaleById = async (id) => {
-    
+
     const sale = await Sale.findByPk(id, {include: [
         {model: Customer, attributes: ["nombre"]},
         {model: Employee, attributes: ["nombre"], 
@@ -108,8 +110,38 @@ const getSaleById = async (id) => {
     return salesFormatted;
 }
 
+const createSale = async (clientId, machinesId, employeeId) => {
+    const machines = await saleUtil.getMachines(machinesId);
+    const saleValue = await saleUtil.calculateSaleValue(machines);
+
+    const date = saleUtil.getDate();
+    console.log("La fecha que llega es: ", date);
+
+    const saleData = {
+        valor_venta: saleValue,
+        fecha: date,
+        cliente_id: clientId,
+        empleado_id: employeeId
+    }
+
+    const sale = await Sale.create(saleData);
+
+    await saleUtil.updateMachines(machines, sale.id);
+
+    const saleFormatted = {
+        id: sale.id,
+        saleValue: sale.valor_venta,
+        date
+    }
+    console.log(saleFormatted.date);
+
+    return saleFormatted;
+}
+
+
 module.exports = {
     getMonthlySalesReport: getMonthlySalesReport,
     getAllSales,
-    getSaleById
+    getSaleById, 
+    createSale
 }

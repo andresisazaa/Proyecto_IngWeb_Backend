@@ -55,8 +55,30 @@ const getSaleById = async (req, res) => {
     }
 }
 
+const createSale = async (req, res) => {
+    const {clientId, machinesId} = req.body;
+
+    if (!clientId || !machinesId) {
+        return res.status(httpStatus.BAD_REQUEST).send({message: "Parámetros incorrectos"});
+    }
+
+    const employeeId = res.locals.infoCurrentUser.id;
+
+    try {
+        const sale = await Sale.createSale(clientId, machinesId, employeeId);
+        return res.status(httpStatus.CREATED).send(sale);
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({message: "No se pudo crear la venta"});
+    }
+
+}
+
 module.exports = {
     getMonthlySalesReport: getMonthlySalesReport,
     getAllSales,
-    getSaleById
+    getSaleById,
+    createSale
 }
