@@ -5,8 +5,21 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Machine';
 
 const getAllMachines = async (req, res) => {
+
+    // Get pos Id to filter
+    const employee = {
+        id: res.locals.infoCurrentUser.id,
+        posId: res.locals.infoCurrentUser.pointOfSale.id,
+    }
+
+    let status = req.query.status;
+
+    if(status != '1' && status != '2' && status!= '3') {
+        status = null;
+    }
+
     try {
-        const machines = await Machine.getAllMachines();
+        const machines = await Machine.getAllMachines(employee.posId, status);
         return res
             .status(httpStatus.OK)
             .send(machines);
@@ -65,8 +78,15 @@ const createMachine = async (req, res) => {
 const updateMachineById = async (req, res) => {
     const { id } = req.params;
 
+    let { status } = req.body;
+    const { machineData } = req.body;
+
+    if (status != 1 && status != 2) {
+        status = null;
+    }
+
     try {
-        const wasUpdated = await Machine.updateMachineById(id, req.body);
+        const wasUpdated = await Machine.updateMachineById(id, status, machineData);
 
         if (wasUpdated) {
             return res
@@ -79,13 +99,14 @@ const updateMachineById = async (req, res) => {
         }
 
     } catch (error) {
+        console.log(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo actualizar la máquina' });
     }
 }
 
-const updateMachines = async (req, res) => {
+/*const updateMachines = async (req, res) => {
     const {status, machineIds} = req.body;
 
     if (!status || machineIds.length === 0) {
@@ -111,12 +132,12 @@ const updateMachines = async (req, res) => {
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo actualizar la máquina y sus estados' });
     }
-}
+}*/
 
 module.exports = {
     getAllMachines,
     getMachineById,
     createMachine,
     updateMachineById,
-    updateMachines
+    //updateMachines
 }

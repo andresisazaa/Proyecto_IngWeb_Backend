@@ -41,14 +41,31 @@ StatusPerMachine.belongsTo(Status, { foreignKey: "estado_id" });
 Brand.hasMany(Model, { foreignKey: "marca_id" });
 Model.belongsTo(Brand, { foreignKey: "marca_id" });
 
-const getAllMachines = async () => {
-  const machines = await Machine.findAll({
-    include: [
-      PointOfSale,
-      { model: StatusPerMachine, attributes: ["fecha"], include: Status },
-      { model: Model, include: Brand }
-    ],
-  });
+const getAllMachines = async (posId, status) => {
+  let machines = []
+  console.log(status);
+  //Get all the machines
+  if (!status) {
+    machines = await Machine.findAll({
+      include: [
+        { model: PointOfSale, where: { id: posId }},
+        { model: StatusPerMachine, attributes: ["fecha"], include: Status },
+        { model: Model, include: Brand }
+      ],
+    });
+
+  //Get the machines status to sell
+  } else {
+
+    machines = await Machine.findAll({
+      include: [
+        { model: PointOfSale, where: { id: posId }},
+        { model: StatusPerMachine, attributes: ["fecha"], include: Status, 
+        where: { estado_id: status}},
+        { model: Model, include: Brand }
+      ],
+    });
+  }
 
   const machinesFormatted = machines.map((machine) => ({
     id: machine.id,
@@ -126,6 +143,12 @@ const createMachines = async (requireData, machines) => {
 
   return newMachines;
 };
+
+//Cambiar el estado y crear la relación
+
+//? Para que en tal caso, me permita actualizar el precio de venta
+// Get maquina a maquina y actualizo su valor de venta, en caso de que
+// machinesData este presente
 const updateMachines = async (status, machinesId) => {
   const date = util.getDate();
 
@@ -141,7 +164,7 @@ const updateMachines = async (status, machinesId) => {
   return result;
 };
 
-const updateMachineById = async (id, machineData) => {
+const updateMachineById = async (id, status, machineData) => {
   const { type, posId, saleValue, modelId } = machineData;
   const machine = {
     tipo: type,
@@ -150,6 +173,11 @@ const updateMachineById = async (id, machineData) => {
     modelo_id: modelId
   };
   const [row] = await Machine.update({ ...machine }, { where: { id } });
+
+  if (status) {
+    const date = util.getDate();
+    const result = await StatusPerMachineModel.createMachineStatus(id, date, status);
+  }
   return row;
 };
 
