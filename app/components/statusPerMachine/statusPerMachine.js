@@ -14,6 +14,26 @@ const createMachinesStatuses = async (machines, date, status) => {
     return createdStatuses;
 }
 
+const createMachineStatus = async (machineId, date, status) => {
+
+    const retrievedStatus = await StatusPerMachine.findAll({where: {estado_id: status, maquina_id: machineId }});
+
+    
+    if (retrievedStatus.length > 0) {
+        return;
+    }
+
+    const statusData = {
+        estado_id: status,
+        maquina_id: machineId,
+        fecha: date
+    };
+
+    const createdStatus = await StatusPerMachine.create(statusData);
+    return createdStatus;
+}
+
 module.exports = {
-    createMachinesStatuses
+    createMachinesStatuses,
+    createMachineStatus
 }

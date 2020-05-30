@@ -9,8 +9,8 @@ router.route('/')
 router.route('/:id')
     .get(controller.getMachineById);
 
-router.route('/')
-    .put(controller.updateMachines);
+/*router.route('/')
+    .put(controller.updateMachines);*/
 
 router.route('/:id')
     .put(controller.updateMachineById);

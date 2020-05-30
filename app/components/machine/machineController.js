@@ -75,8 +75,15 @@ const createMachine = async (req, res) => {
 const updateMachineById = async (req, res) => {
     const { id } = req.params;
 
+    let { status } = req.body;
+    const { machineData } = req.body;
+
+    if (status != 1 && status != 2) {
+        status = null;
+    }
+
     try {
-        const wasUpdated = await Machine.updateMachineById(id, req.body);
+        const wasUpdated = await Machine.updateMachineById(id, status, machineData);
 
         if (wasUpdated) {
             return res
@@ -89,13 +96,14 @@ const updateMachineById = async (req, res) => {
         }
 
     } catch (error) {
+        console.log(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo actualizar la máquina' });
     }
 }
 
-const updateMachines = async (req, res) => {
+/*const updateMachines = async (req, res) => {
     const {status, machineIds} = req.body;
 
     if (!status || machineIds.length === 0) {
@@ -121,12 +129,12 @@ const updateMachines = async (req, res) => {
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: 'No se pudo actualizar la máquina y sus estados' });
     }
-}
+}*/
 
 module.exports = {
     getAllMachines,
     getMachineById,
     createMachine,
     updateMachineById,
-    updateMachines
+    //updateMachines
 }
