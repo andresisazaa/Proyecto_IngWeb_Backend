@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const Employee = require('./employee');
-const { register, sendPasswordResetLink, getPermissions } = require('../../../config/firebase/index');
+const { isValidScope } = require('../../services/utils')
+
+const component = 'Employee';
 
 const createEmployee = async (req, res) => {
     const { name, document, email, jobId, posId } = req.body;

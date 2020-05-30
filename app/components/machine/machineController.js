@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
 const Machine = require('./machine');
-const { getPermissions } = require('../../../config/firebase/index')
+const { isValidScope } = require('../../services/utils')
 
+const component = 'Machine';
 
 const getAllMachines = async (req, res) => {
     try {

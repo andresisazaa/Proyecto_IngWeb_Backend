@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
 const Job = require('./job');
-const { getPermissions } = require('../../../config/firebase/index')
+const { isValidScope } = require('../../services/utils')
 
+const component = 'Job';
 
 const getJobs = async (req, res) => {
     try {

@@ -1,7 +1,8 @@
 const httpStatus = require("http-status");
 const PointOfSale = require("./pointOfSale");
-const { getPermissions } = require('../../../config/firebase/index')
+const { isValidScope } = require('../../services/utils')
 
+const component = 'PointOfSale';
 
 const getPointsOfSale = async (req, res) => {
 

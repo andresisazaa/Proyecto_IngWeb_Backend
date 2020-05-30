@@ -1,8 +1,9 @@
 const httpStatus = require('http-status');
 const Purchase = require('./purchase');
 const Util = require('./purchaseUtil');
-const { getPermissions } = require('../../../config/firebase/index')
+const { isValidScope } = require('../../services/utils')
 
+const component = 'Purchase';
 
 const getAllPurchases = async (req, res) => {
     try {

@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const Customer = require('./customer');
-const { getPermissions} = require('../../../config/firebase/index')
+const { isValidScope } = require('../../services/utils');
+
+const component = 'Customer';
 
 const getAllCustomers = async (req, res) => {
     try {
