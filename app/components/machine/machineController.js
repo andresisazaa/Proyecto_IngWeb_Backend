@@ -6,14 +6,13 @@ const getAllMachines = async (req, res) => {
     // Get pos Id to filter
     const employee = {
         id: res.locals.infoCurrentUser.id,
-        posId: res.locals.infoCurrentUser.job.id,
+        posId: res.locals.infoCurrentUser.pointOfSale.id,
     }
 
-    console.log("La información del usuario es: ");
-    console.log(employee);
-    console.log(employee.posId);
+    const retrieveAvailable = req.query.available;
+
     try {
-        const machines = await Machine.getAllMachines(employee.posId);
+        const machines = await Machine.getAllMachines(employee.posId, retrieveAvailable);
         return res
             .status(httpStatus.OK)
             .send(machines);

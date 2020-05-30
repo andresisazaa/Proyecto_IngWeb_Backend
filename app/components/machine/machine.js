@@ -41,14 +41,31 @@ StatusPerMachine.belongsTo(Status, { foreignKey: "estado_id" });
 Brand.hasMany(Model, { foreignKey: "marca_id" });
 Model.belongsTo(Brand, { foreignKey: "marca_id" });
 
-const getAllMachines = async (posId) => {
-  const machines = await Machine.findAll({
-    include: [
-      { model: PointOfSale},
-      { model: StatusPerMachine, attributes: ["fecha"], include: Status },
-      { model: Model, include: Brand }
-    ],
-  });
+const getAllMachines = async (posId, available) => {
+  let machines = []
+  //Get all the machines
+  if (!available) {
+    machines = await Machine.findAll({
+      include: [
+        { model: PointOfSale, where: { id: posId }},
+        { model: StatusPerMachine, attributes: ["fecha"], include: Status },
+        { model: Model, include: Brand }
+      ],
+    });
+
+  //Get the machines available to sell
+  } else {
+    const availableStatus = 2;
+    
+    machines = await Machine.findAll({
+      include: [
+        { model: PointOfSale, where: { id: posId }},
+        { model: StatusPerMachine, attributes: ["fecha"], include: Status, 
+        where: { estado_id: availableStatus}},
+        { model: Model, include: Brand }
+      ],
+    });
+  }
 
   const machinesFormatted = machines.map((machine) => ({
     id: machine.id,
