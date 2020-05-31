@@ -10,7 +10,7 @@ const getAllCustomers = async () => {
         id: customer.id,
         name: customer.nombre,
         document: customer.documento,
-        number: customer.telefono,
+        phoneNumber: customer.telefono,
         email: customer.email,
         address: customer.direccion
     }));
@@ -27,7 +27,7 @@ const getCustomerById = async (id) => {
         id: customer.id,
         name: customer.nombre,
         document: customer.documento,
-        number: customer.telefono,
+        phoneNumber: customer.telefono,
         email: customer.email,
         address: customer.direccion
     };
@@ -36,12 +36,12 @@ const getCustomerById = async (id) => {
 }
 
 const createCustomer = async (customerData) => {
-    const {name, document, number, email, address} = customerData;
+    const {name, document, phoneNumber, email, address} = customerData;
 
     const customer = await Customer.create({
         nombre: name,
         documento: document,
-        telefono: number,
+        telefono: phoneNumber,
         email: email,
         direccion: address
     });
@@ -50,7 +50,7 @@ const createCustomer = async (customerData) => {
         id: customer.id,
         name: customer.nombre,
         document: customer.documento,
-        number: customer.telefono,
+        phoneNumber: customer.telefono,
         email: customer.email,
         address: customer.direccion
     };
@@ -59,12 +59,12 @@ const createCustomer = async (customerData) => {
 }
 
 const updateCustomerById = async (id, customerData) => {
-    const {name, document, number, email, address} = customerData;
+    const {name, document, phoneNumber, email, address} = customerData;
     
     const customer = {
         nombre: name,
         documento: document,
-        telefono: number,
+        telefono: phoneNumber,
         email: email,
         direccion: address
     }

@@ -143,11 +143,7 @@ const createMachines = async (requireData, machines) => {
   return newMachines;
 };
 
-//Cambiar el estado y crear la relación
 
-//? Para que en tal caso, me permita actualizar el precio de venta
-// Get maquina a maquina y actualizo su valor de venta, en caso de que
-// machinesData este presente
 const updateMachines = async (status, machinesId) => {
   const date = util.getDate();
 
@@ -164,12 +160,13 @@ const updateMachines = async (status, machinesId) => {
 };
 
 const updateMachineById = async (id, status, machineData) => {
-  const { type, posId, saleValue, modelId } = machineData;
+  const { type, posId, saleValue, modelId, saleId } = machineData;
   const machine = {
     tipo: type,
     punto_de_venta_id: posId,
     valor_venta: saleValue,
-    modelo_id: modelId
+    modelo_id: modelId,
+    venta_id: saleId
   };
   const [row] = await Machine.update({ ...machine }, { where: { id } });
 
