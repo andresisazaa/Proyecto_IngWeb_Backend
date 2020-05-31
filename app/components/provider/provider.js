@@ -9,7 +9,7 @@ const getAllProviders = async () => {
         id: provider.id,
         businessName: provider.razon_social,
         nit: provider.nit,
-        number: provider.telefono,
+        phoneNumber: provider.telefono,
         email: provider.email,
         address: provider.direccion
     }));
@@ -26,7 +26,7 @@ const getProviderById = async (id) => {
         id: provider.id,
         businessName: provider.razon_social,
         nit: provider.nit,
-        number: provider.telefono,
+        phoneNumber: provider.telefono,
         email: provider.email,
         address: provider.direccion
     };
@@ -35,12 +35,12 @@ const getProviderById = async (id) => {
 }
 
 const createProvider = async (providerData) => {
-    const {businessName, nit, number, email, address} = providerData;
+    const {businessName, nit, phoneNumber, email, address} = providerData;
 
     const provider = await Provider.create({
         razon_social: businessName,
         nit: nit,
-        telefono: number,
+        telefono: phoneNumber,
         email: email,
         direccion: address
     });
@@ -49,7 +49,7 @@ const createProvider = async (providerData) => {
         id: provider.id,
         businessName: provider.razon_social,
         nit: provider.nit,
-        number: provider.telefono,
+        phoneNumber: provider.telefono,
         email: provider.email,
         address: provider.direccion
     };
@@ -58,12 +58,12 @@ const createProvider = async (providerData) => {
 }
 
 const updateProviderById = async (id, providerData) => {
-    const {businessName, nit, number, email, address} = providerData;
+    const {businessName, nit, phoneNumber, email, address} = providerData;
 
     const provider = {
         razon_social: businessName,
         nit: nit,
-        telefono: number,
+        telefono: phoneNumber,
         email: email,
         direccion: address
     };
