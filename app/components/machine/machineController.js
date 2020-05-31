@@ -6,7 +6,7 @@ const component = 'Machine';
 
 const getAllMachines = async (req, res) => {
      const isPermitted = isValidScope(getAllMachines.name, component)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     // Get pos Id to filter
     const employee = {
         id: res.locals.infoCurrentUser.id,
