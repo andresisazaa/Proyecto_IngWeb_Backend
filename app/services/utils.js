@@ -52,12 +52,14 @@ const generateRandomPassword = (letters, numbers, either) => {
 }
 
 
-const isValidScope = async(name, component) => {
-    const componentPermissions = getPermissions(component);
+const isValidScope = async(name, component, role) => {
+    const componentPermissions = await getPermissions(component);    
     const servicePermissions = componentPermissions[name];
-    const cargo_id = res.locals.cargo_id;
-    if(servicePermissions.find( rol => rol === cargo_id)) return true;
-    else return false;
+    if(servicePermissions.find( rol => rol === role)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 

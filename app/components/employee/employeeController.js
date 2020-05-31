@@ -5,7 +5,10 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Employee';
 
 const createEmployee = async (req, res) => {
-     if(!isValidScope(createEmployee.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(createEmployee.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { name, document, email, jobId, posId } = req.body;
 
     if (!name || !document || !email || !jobId || !posId) {
@@ -16,18 +19,18 @@ const createEmployee = async (req, res) => {
 
     try {
         const registeredEmployee = await Employee.getEmployeeByEmail(email);
-        if(registeredEmployee) {
+        if (registeredEmployee) {
             return res
                 .status(httpStatus.BAD_REQUEST)
                 .send({ message: `Error, el usuario con el correo '${email}' ya ha sido creado` });
-        }        
+        }
         const employee = await Employee.createEmployee(req.body);
         const signup = await register(employee);
 
-        if(signup){
+        if (signup) {
             const sendedMail = sendPasswordResetLink(employee);
 
-            if(sendedMail) {
+            if (sendedMail) {
                 return res
                     .status(httpStatus.CREATED)
                     .send(employee),
@@ -37,15 +40,15 @@ const createEmployee = async (req, res) => {
                             .status(httpStatus.BAD_REQUEST)
                             .send({ message: 'Error, datos incompletos' });
                     }
-                } else {
-                    return res
-                        .status(httpStatus.INTERNAL_SERVER_ERROR)
-                        .send({ message: 'Error al enviar el correo'})
-                }
+            } else {
+                return res
+                    .status(httpStatus.INTERNAL_SERVER_ERROR)
+                    .send({ message: 'Error al enviar el correo' })
+            }
         } else {
             return res
-            .status(httpStatus.INTERNAL_SERVER_ERROR)
-            .send({ message: 'Error al registrar al usuario'})
+                .status(httpStatus.INTERNAL_SERVER_ERROR)
+                .send({ message: 'Error al registrar al usuario' })
         }
     } catch (error) {
         console.error(error);
@@ -56,7 +59,10 @@ const createEmployee = async (req, res) => {
 }
 
 const updateEmployee = async (req, res) => {
-     if(!isValidScope(updateEmployee.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(updateEmployee.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { id } = req.params;
 
     try {
@@ -78,13 +84,15 @@ const updateEmployee = async (req, res) => {
     }
 }
 
-const getEmployees = async (_, res) => {    
-     if(!isValidScope(getEmployees.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+const getEmployees = async (_, res) => {
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(getEmployees.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     try {
         const employees = await Employee.getEmployees();
         return res
-                .status(httpStatus.OK)
-                .send(employees);
+            .status(httpStatus.OK)
+            .send(employees);
     } catch (error) {
         console.error(error);
         return res
@@ -94,12 +102,15 @@ const getEmployees = async (_, res) => {
 }
 
 const getEmployeeById = async (req, res) => {
-     if(!isValidScope(getEmployeeById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(getEmployeeById.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { id } = req.params;
 
     try {
         const employee = await Employee.getEmployeeById(id);
-        
+
         if (employee) {
             return res
                 .status(httpStatus.OK)
@@ -118,7 +129,10 @@ const getEmployeeById = async (req, res) => {
 }
 
 const deleteEmployee = async (req, res) => {
-     if(!isValidScope(deleteEmployee.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(deleteEmployee.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { id } = req.params;
     try {
         const wasDeleted = await Employee.deleteEmployee(id);

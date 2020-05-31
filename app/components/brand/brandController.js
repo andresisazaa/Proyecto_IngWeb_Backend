@@ -5,7 +5,9 @@ const component = 'Brand';
 
 
 const getBrands = async (req, res) => {
-    if(!isValidScope(getBrands.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'})
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(getBrands.name, component, role);
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'})
     try {
         const brands = await Brand.getBrands();
         return res
@@ -19,7 +21,9 @@ const getBrands = async (req, res) => {
 }
 
 const getBrandById = async (req, res) => {
-    if(!isValidScope(getBrandById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'})
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(getBrandById.name, component, role) 
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'})
     const { id } = req.params;
     try {
         const brand = await Brand.getBrandById(id);
@@ -41,7 +45,9 @@ const getBrandById = async (req, res) => {
 }
 
 const createBrand = async (req, res) => {
-     if(!isValidScope(createBrand.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+     const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(createBrand.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { brandName } = req.body;
     if (!brandName) {
         return res
@@ -62,7 +68,9 @@ const createBrand = async (req, res) => {
 }
 
 const updateBrand = async (req, res) => {
-     if(!isValidScope(updateBrand.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+     const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(updateBrand.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
     const { body } = req;
     try {
@@ -84,7 +92,9 @@ const updateBrand = async (req, res) => {
 }
 
 const deleteBrand = async (req, res) => {
-     if(!isValidScope(deleteBrand.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+     const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(deleteBrand.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
     try {
         const wasDeleted = await Brand.deleteBrand(id);

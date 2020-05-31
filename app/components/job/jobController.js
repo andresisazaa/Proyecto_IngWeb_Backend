@@ -5,7 +5,10 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Job';
 
 const getJobs = async (req, res) => {
-     if(!isValidScope(getJobs.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(getJobs.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     try {
         const jobs = await Job.getJobs();
         if (jobs.length > 0) {
@@ -26,7 +29,10 @@ const getJobs = async (req, res) => {
 }
 
 const getJobById = async (req, res) => {
-     if(!isValidScope(getJobById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(getJobById.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { id } = req.params;
     try {
         const job = await Job.getJobById(id);
@@ -48,7 +54,10 @@ const getJobById = async (req, res) => {
 }
 
 const createJob = async (req, res) => {
-     if(!isValidScope(createJob.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(createJob.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { body } = req;
     try {
         const job = await Job.createJob(body);
@@ -70,7 +79,10 @@ const createJob = async (req, res) => {
 }
 
 const updateJob = async (req, res) => {
-     if(!isValidScope(updateJob.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(updateJob.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { id } = req.params;
     const { body } = req;
     try {
@@ -93,7 +105,10 @@ const updateJob = async (req, res) => {
 }
 
 const deleteJob = async (req, res) => {
-     if(!isValidScope(deleteJob.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(deleteJob.name, component, role)
+    if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+
     const { id } = req.params;
     try {
         const wasDeleted = await Job.deleteJob(id);

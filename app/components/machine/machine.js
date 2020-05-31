@@ -43,7 +43,6 @@ Model.belongsTo(Brand, { foreignKey: "marca_id" });
 
 const getAllMachines = async (posId, status) => {
   let machines = []
-  console.log(status);
   //Get all the machines
   if (!status) {
     machines = await Machine.findAll({

@@ -5,7 +5,9 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Provider';
 
 const getAllProviders = async (req, res) => {
-    if(!isValidScope(getAllProviders.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(getAllProviders.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     try {
         const providers = await Provider.getAllProviders();
         return res
@@ -20,7 +22,9 @@ const getAllProviders = async (req, res) => {
 }
 
 const getProviderById = async (req, res) => {
-    if(!isValidScope(getProviderById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(getProviderById.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params; 
 
     try {
@@ -43,7 +47,9 @@ const getProviderById = async (req, res) => {
 }
 
 const createProvider = async (req, res) => {
-    if(!isValidScope(createProvider.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(createProvider.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { businessName, nit, email } = req.body;
 
     if (!businessName || !nit || !email) {
@@ -65,7 +71,9 @@ const createProvider = async (req, res) => {
 }
 
 const updateProviderById = async (req, res) => {
-    if(!isValidScope(updateProviderById.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(updateProviderById.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
 
     try {

@@ -6,7 +6,9 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Sale';
 
 const getMonthlySalesReport = async (req, res) => {
-    if(!isValidScope(getMonthlySalesReport.name, component)) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción'});
+    const role = res.locals.infoCurrentUser.job.id
+const isPermitted = isValidScope(getMonthlySalesReport.name, component, role)
+if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     let retrieved = await Sale.getMonthlySalesReport();
 
     let formattedExcelArray = retrieved.map(row => {
