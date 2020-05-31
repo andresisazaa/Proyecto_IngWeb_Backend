@@ -1,7 +1,6 @@
 const db = require("../../../config/db/sequelize");
 let Machine = require("../../../config/db/models/machine");
 let Model = require("../../../config/db/models/model");
-//let Purchase = require("../../../config/db/models/purchase");
 let PointOfSale = require("../../../config/db/models/pointOfSale");
 let StatusPerMachine = require("../../../config/db/models/statusPerMachine");
 let Status = require("../../../config/db/models/status");
@@ -9,13 +8,9 @@ let Brand = require("../../../config/db/models/brand");
 const StatusPerMachineModel = require("../statusPerMachine/statusPerMachine");
 const util = require("../purchase/purchaseUtil");
 
-//let Sale = require("../../../config/db/models/sale");
-
 Machine = Machine(db.sequelize, db.Sequelize);
 Model = Model(db.sequelize, db.Sequelize);
-//Purchase = Purchase(db.sequelize, db.Sequelize);
 PointOfSale = PointOfSale(db.sequelize, db.Sequelize);
-//Sale = Sale(db.sequelize, db.Sequelize);
 StatusPerMachine = StatusPerMachine(db.sequelize, db.Sequelize);
 Status = Status(db.sequelize, db.Sequelize);
 Brand = Brand(db.sequelize, db.Sequelize);
@@ -23,14 +18,10 @@ Brand = Brand(db.sequelize, db.Sequelize);
 Model.hasMany(Machine, { foreignKey: "modelo_id" });
 Machine.belongsTo(Model, { foreignKey: "modelo_id" });
 
-//Sale.hasMany(Machine, { foreignKey: "venta_id" });
-//Machine.belongsTo(Sale, { foreignKey: "venta_id" });
 
 PointOfSale.hasMany(Machine, { foreignKey: "punto_de_venta_id" });
 Machine.belongsTo(PointOfSale, { foreignKey: "punto_de_venta_id" });
 
-//Purchase.hasMany(Machine, { foreignKey: "compra_id" });
-//Machine.belongsTo(Purchase, { foreignKey: "compra_id" });
 
 Machine.hasMany(StatusPerMachine, { foreignKey: "maquina_id" });
 StatusPerMachine.belongsTo(Machine, { foreignKey: "maquina_id" });
@@ -57,10 +48,12 @@ const getAllMachines = async (posId, status) => {
   } else {
 
     machines = await Machine.findAll({
+      where: {venta_id: null},
       include: [
         { model: PointOfSale, where: { id: posId }},
         { model: StatusPerMachine, attributes: ["fecha"], include: Status, 
-        where: { estado_id: status}},
+          where: { estado_id: status}
+        },
         { model: Model, include: Brand }
       ],
     });

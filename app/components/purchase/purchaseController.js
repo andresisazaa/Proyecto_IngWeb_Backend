@@ -55,7 +55,7 @@ if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Ust
     const { providerId, machines } = req.body;
     const employee = {
         id: res.locals.infoCurrentUser.id,
-        posId: res.locals.infoCurrentUser.job.id,
+        posId: res.locals.infoCurrentUser.pointOfSale.id
     }
     
     if (!providerId || machines.length === 0) {
