@@ -60,16 +60,16 @@ const getSaleById = async (req, res) => {
 }
 
 const createSale = async (req, res) => {
-    const {clientId, machinesId} = req.body;
+    const {customerId, machinesId} = req.body;
 
-    if (!clientId || !machinesId) {
+    if (!customerId || !machinesId) {
         return res.status(httpStatus.BAD_REQUEST).send({message: "Parámetros incorrectos"});
     }
 
     const employeeId = res.locals.infoCurrentUser.id;
 
     try {
-        const sale = await Sale.createSale(clientId, machinesId, employeeId);
+        const sale = await Sale.createSale(customerId, machinesId, employeeId);
         return res.status(httpStatus.CREATED).send(sale);
     } catch (error) {
         console.log(error);

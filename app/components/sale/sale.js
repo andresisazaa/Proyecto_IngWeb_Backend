@@ -110,7 +110,7 @@ const getSaleById = async (id) => {
     return salesFormatted;
 }
 
-const createSale = async (clientId, machinesId, employeeId) => {
+const createSale = async (customerId, machinesId, employeeId) => {
     const machines = await saleUtil.getMachines(machinesId);
     const saleValue = await saleUtil.calculateSaleValue(machines);
 
@@ -120,7 +120,7 @@ const createSale = async (clientId, machinesId, employeeId) => {
     const saleData = {
         valor_venta: saleValue,
         fecha: date,
-        cliente_id: clientId,
+        cliente_id: customerId,
         empleado_id: employeeId
     }
 
