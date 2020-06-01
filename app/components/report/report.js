@@ -28,29 +28,31 @@ Employee.belongsTo(PointOfSale, { foreignKey: "punto_de_venta_id" });
 const endDate = new Date();
 const startDate = new Date().setDate(new Date().getDate() - 30);
 
-const getMonthlySalesReport = async () => {
+const getMonthlySalesReport = async (role, posId) => {
     // let date = new Date();
     // let startDate = new Date(date.getFullYear(), date.getMonth(), 1);
     // let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    let endDate = new Date();
-    let startDate = new Date().setDate(new Date().getDate() - 30);
 
-    let sales = await Sale.findAll({
-        where: {
-            fecha: { [Op.between]: [startDate, endDate] }
-        },
-        include: [{
-            model: Employee, include: [
-                PointOfSale
-            ]
-        }]
-    });
+    let selector;
+    switch (role) {
+        case 2:
+            selector = { where: { fecha: { [Op.between]: [startDate, endDate] } },
+                include: [{ model: Employee, where: { punto_de_venta_id: posId }, include: [PointOfSale]}]};
+            break;
+        case 3:
+            selector = { where: { fecha: { [Op.between]: [startDate, endDate] } },
+                include: [{ model: Employee, include: [PointOfSale]}]};
+            break;
+    }
+
+    let sales = await Sale.findAll(selector);
 
     return sales.map(sale => ({
         id: sale.id,
         saleValue: sale.valor_venta,
         date: sale.fecha,
         pointOfSale: sale.Empleado.Punto_de_Ventum.nombre_pdv,
+        employeeDocument: sale.Empleado.documento,
         employee: {
             document: sale.Empleado.documento,
             name: sale.Empleado.nombre,
@@ -59,27 +61,28 @@ const getMonthlySalesReport = async () => {
     }));
 }
 
-const getMonthlyPurchasesReport = async () => {
-    // let date = new Date();
-    // let startDate = new Date(date.getFullYear(), date.getMonth(), 1);
-    // let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+const getMonthlyPurchasesReport = async (role, posId) => {
 
-    let purchases = await Purchase.findAll({
-        where: {
-            fecha: { [Op.between]: [startDate, endDate] }
-        },
-        include: [{
-            model: Employee, include: [
-                PointOfSale
-            ]
-        }, Provider]
-    });
+    let selector;
+    switch (role) {
+        case 2:
+            selector = { where: { fecha: { [Op.between]: [startDate, endDate] } },
+                include: [{ model: Employee, where: { punto_de_venta_id: posId }, include: [PointOfSale]}, Provider]};
+            break;
+        case 3:
+            selector = { where: { fecha: { [Op.between]: [startDate, endDate] } },
+                include: [{ model: Employee, include: [PointOfSale]}, Provider]};
+            break;
+    }
+
+    let purchases = await Purchase.findAll(selector);
 
     return purchases.map(purchase => ({
         id: purchase.id,
         purchaseValue: purchase.valor_compra,
         date: purchase.fecha,
         pointOfSale: purchase.Empleado.Punto_de_Ventum.nombre_pdv,
+        employeeDocument: purchase.Empleado.documento,
         employee: {
             document: purchase.Empleado.documento,
             name: purchase.Empleado.nombre,

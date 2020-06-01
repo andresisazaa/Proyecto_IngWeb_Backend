@@ -5,9 +5,9 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Model';
 
 const getAllModels = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(getAllModels.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = isValidScope(getAllModels.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     try {
         const models = await Model.getAllModels();
         return res
@@ -22,9 +22,9 @@ if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Ust
 }
 
 const getModelById = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(getModelById.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = isValidScope(getModelById.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const {id} = req.params;
     try {
         const model = await Model.getModelById(id);
@@ -47,9 +47,9 @@ if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Ust
 }
 
 const createModel = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(createModel.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = isValidScope(createModel.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const {modelName, brandId} = req.body;
 
     if (!modelName || !brandId) {
@@ -72,9 +72,9 @@ if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Ust
 }
 
 const updateModelById = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(updateModelById.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = isValidScope(updateModelById.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
 
     try {

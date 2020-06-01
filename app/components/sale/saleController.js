@@ -3,8 +3,11 @@ const Sale = require('./sale');
 const httpStatus = require('http-status');
 
 const getAllSales = async (req, res) => {
+    const role = res.locals.infoCurrentUser.job.id
+    const employeeId = res.locals.infoCurrentUser.id;
+    const posId = res.locals.infoCurrentUser.pointOfSale.id;
     try {
-        const sales = await Sale.getAllSales()
+        const sales = await Sale.getAllSales(role, employeeId, posId);
         return res
             .status(httpStatus.OK)
             .send(sales);

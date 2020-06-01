@@ -33,12 +33,12 @@ Brand.hasMany(Model, { foreignKey: "marca_id" });
 Model.belongsTo(Brand, { foreignKey: "marca_id" });
 
 const getAllMachines = async (posId, status) => {
-  let machines = []
+  let machines;
   //Get all the machines
   if (!status) {
     machines = await Machine.findAll({
       include: [
-        { model: PointOfSale, where: { id: posId }},
+        PointOfSale,
         { model: StatusPerMachine, attributes: ["fecha"], include: Status },
         { model: Model, include: Brand }
       ],
@@ -46,9 +46,8 @@ const getAllMachines = async (posId, status) => {
 
   //Get the machines status to sell
   } else {
-
     machines = await Machine.findAll({
-      where: {venta_id: null},
+      where: { venta_id: null },
       include: [
         { model: PointOfSale, where: { id: posId }},
         { model: StatusPerMachine, attributes: ["fecha"], include: Status, 

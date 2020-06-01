@@ -30,12 +30,28 @@ Machine.belongsTo(Sale, { foreignKey: "venta_id" });
 Model.hasMany(Machine, { foreignKey: "modelo_id" });
 Machine.belongsTo(Model, { foreignKey: "modelo_id" });
 
-const getAllSales = async () => {
-    const sales = Sale.findAll({include: [
-        {model: Customer, attributes: ["nombre"]}, 
-        {model: Employee, attributes: ["nombre"], 
-            include: [{model: PointOfSale, attributes: ["nombre_pdv"]}]}
-    ]});
+const getAllSales = async (role, employeeId, posId) => {
+
+    let selector;
+    switch (role) {
+        case 1:
+            selector = { include: [{model: Employee, attributes: ["nombre"], where: { id: employeeId, punto_de_venta_id: posId },
+                    include: [{model: PointOfSale, attributes: ["nombre_pdv"]}]}, {model: Customer, attributes: ["nombre"]}] }
+            break;
+        case 2:
+            selector = { include: [{model: Employee, attributes: ["nombre"], where: { punto_de_venta_id: posId },
+                    include: [{model: PointOfSale, attributes: ["nombre_pdv"]}]}, {model: Customer, attributes: ["nombre"]}] };
+            break;
+        case 3:
+            selector = {include: [
+                    {model: Customer, attributes: ["nombre"]},
+                    {model: Employee, attributes: ["nombre"],
+                        include: [{model: PointOfSale, attributes: ["nombre_pdv"]}]}
+                ]};
+            break;
+    }
+
+    const sales = await Sale.findAll(selector);
 
     const salesFormatted = sales.map((sale) => ({
         id: sale.id,

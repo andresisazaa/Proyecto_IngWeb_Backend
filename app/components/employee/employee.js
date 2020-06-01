@@ -53,9 +53,21 @@ const updateEmployee = async (id, employeeData) => {
     return updatedRow;
 }
 
-const getEmployees = async () => {
+const getEmployees = async (role, pos) => {
+
+    let selector;
+    switch (role) {
+        case 2:
+            selector = {
+                model: PointOfSale, where: { id: pos }
+            }
+            break;
+        case 3:
+            selector = { model: PointOfSale };
+            break;
+    }
     const employees = await Employee.findAll({
-        include: [ Job, PointOfSale ]
+        include: [ Job, selector ]
     });
 
     const employeesFormatted = employees.map(employee => {
