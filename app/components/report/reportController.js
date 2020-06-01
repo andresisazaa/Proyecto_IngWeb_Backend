@@ -8,7 +8,9 @@ const Utils = require('./reportUtil');
 
 const getMonthlySalesReportFile = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
-    const isPermitted = isValidScope(getMonthlySalesReportFile.name, component, role)
+    console.log(`ROL ${role}`);
+    const isPermitted = await isValidScope(getMonthlySalesReportFile.name, component, role);
+    console.log(`isPermitted ${isPermitted}`);
     if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const posId = res.locals.infoCurrentUser.pointOfSale.id;
     let retrievedSales = await Report.getMonthlySalesReport(role, posId);
@@ -22,7 +24,7 @@ const getMonthlySalesReportFile = async (req, res) => {
 const getMonthlySalesReportByPos = async (req, res) => {
     try {
         const role = res.locals.infoCurrentUser.job.id
-        const isPermitted = isValidScope(getMonthlySalesReportByPos.name, component, role)
+        const isPermitted = await isValidScope(getMonthlySalesReportByPos.name, component, role)
         if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
         const posId = res.locals.infoCurrentUser.pointOfSale.id;
         let retrieved = await Report.getMonthlySalesReport(role, posId);
@@ -39,7 +41,7 @@ const getMonthlySalesReportByPos = async (req, res) => {
 const getMonthlyPurchasesReportByPos = async (req, res) => {
     try {
         const role = res.locals.infoCurrentUser.job.id
-        const isPermitted = isValidScope(getMonthlyPurchasesReportByPos.name, component, role)
+        const isPermitted = await isValidScope(getMonthlyPurchasesReportByPos.name, component, role)
         if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
         const posId = res.locals.infoCurrentUser.pointOfSale.id;
         let retrieved = await Report.getMonthlyPurchasesReport(role, posId);

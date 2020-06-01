@@ -45,9 +45,9 @@ const getBrandById = async (req, res) => {
 }
 
 const createBrand = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(createBrand.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(createBrand.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { brandName } = req.body;
     if (!brandName) {
         return res
@@ -68,9 +68,9 @@ if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Ust
 }
 
 const updateBrand = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(updateBrand.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(updateBrand.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
     const { body } = req;
     try {
@@ -92,9 +92,9 @@ if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Ust
 }
 
 const deleteBrand = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(deleteBrand.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = await isValidScope(deleteBrand.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
     try {
         const wasDeleted = await Brand.deleteBrand(id);
