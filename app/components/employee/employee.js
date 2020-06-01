@@ -24,7 +24,7 @@ const createEmployee = async (employeeData) => {
         direccion: employeeData.address,
         cargo_id: employeeData.jobId,
         punto_de_venta_id: employeeData.posId
-    });
+    }); 
 
     const employeeFormatted = {
         id: newEmployee.id,
@@ -127,9 +127,29 @@ const getEmployeeById = async (id) => {
 
 const getEmployeeByEmail = async (email) => {
 
-    const employee = await Employee.findOne({ where: { email: email }});
+    const employee = await Employee.findOne({ where: { email: email },
+         include: [Job, PointOfSale]});
     if(!employee) return null;
-    return employee;
+    const employeeFormatted = {
+        id : employee.id,
+        name : employee.nombre,
+        document : employee.documento,
+        phoneNumber : employee.telefono,
+        email : employee.email,
+        address : employee.direccion,
+        active : employee.habilitado,
+        job : {
+            id : employee.Cargo.id,
+            name : employee.Cargo.nombre_cargo,
+            salary : employee.Cargo.salario
+        },
+        pointOfSale : {
+            id: employee.punto_de_venta_id,
+            name: employee.Punto_de_Ventum.nombre_pdv,
+            address: employee.Punto_de_Ventum.direccion
+        }
+    };
+    return employeeFormatted;
 }
 
 const deleteEmployee = async (id) => {

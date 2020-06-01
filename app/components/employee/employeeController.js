@@ -19,7 +19,7 @@ const createEmployee = async (req, res) => {
 
     try {
         const registeredEmployee = await Employee.getEmployeeByEmail(email);
-        if (registeredEmployee) {
+        if (registeredEmployee) { 
             return res
                 .status(httpStatus.BAD_REQUEST)
                 .send({ message: `Error, el usuario con el correo '${email}' ya ha sido creado` });
@@ -154,10 +154,32 @@ const deleteEmployee = async (req, res) => {
     }
 }
 
+const getEmployeeByEmail = async (req, res) =>{
+    const {email} = req.body;
+
+    if (!email) {
+        return res
+            .status(httpStatus.BAD_REQUEST)
+            .send({ message: 'Parámetros incorrectos' });
+    }
+    
+    try {
+        const employee = await Employee.getEmployeeByEmail(email);
+        return res
+            .status(httpStatus.OK)
+            .send(employee);
+    } catch (error) {        
+        return res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .send({ message: 'Error al enviar el correo' })
+    }
+}
+
 module.exports = {
     createEmployee,
     updateEmployee,
     getEmployees,
     getEmployeeById,
-    deleteEmployee
+    deleteEmployee, 
+    getEmployeeByEmail
 };
