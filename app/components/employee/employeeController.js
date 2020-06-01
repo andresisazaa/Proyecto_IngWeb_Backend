@@ -85,11 +85,12 @@ const updateEmployee = async (req, res) => {
 }
 
 const getEmployees = async (_, res) => {
-    const role = res.locals.infoCurrentUser.job.id
+    const role = res.locals.infoCurrentUser.job.id;
     const isPermitted = await isValidScope(getEmployees.name, component, role)
     if (!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     try {
-        const employees = await Employee.getEmployees();
+        const posId = res.locals.infoCurrentUser.pointOfSale.id;
+        const employees = await Employee.getEmployees(role, posId);
         return res
             .status(httpStatus.OK)
             .send(employees);

@@ -5,9 +5,9 @@ const { isValidScope } = require('../../services/utils');
 const component = 'Customer';
 
 const getAllCustomers = async (req, res) => {
-     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(getAllCustomers.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const role = res.locals.infoCurrentUser.job.id
+    const isPermitted = isValidScope(getAllCustomers.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     try {
         const customers = await Customer.getAllCustomers();
         return res

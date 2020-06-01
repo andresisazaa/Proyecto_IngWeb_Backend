@@ -7,10 +7,12 @@ const component = 'Purchase';
 
 const getAllPurchases = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(getAllPurchases.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const isPermitted = isValidScope(getAllPurchases.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     try {
-        const purchases = await Purchase.getAllPurchases();
+        const employeeId = res.locals.infoCurrentUser.id;
+        const posId = res.locals.infoCurrentUser.pointOfSale.id;
+        const purchases = await Purchase.getAllPurchases(role, employeeId, posId);
         return res
             .status(httpStatus.OK)
             .send(purchases);
@@ -24,8 +26,8 @@ if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Ust
 
 const getPurchaseById = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
-const isPermitted = isValidScope(getPurchaseById.name, component, role)
-if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
+    const isPermitted = isValidScope(getPurchaseById.name, component, role)
+    if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
 
     try {

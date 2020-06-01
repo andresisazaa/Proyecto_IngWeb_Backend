@@ -35,10 +35,21 @@ Machine.belongsTo(Model, { foreignKey: "modelo_id" });
 Brand.hasMany(Model, { foreignKey: "marca_id" });
 Model.belongsTo(Brand, { foreignKey: "marca_id" });
 
-//{model: Employee, where: {id: 1}}
+const getAllPurchases = async (role, employeeId, posId) => {
+    let selector;
+    switch (role) {
+        case 1:
+            selector = { include: [{ model: Employee, where: { id: employeeId, punto_de_venta_id: posId }}, Provider] }
+            break;
+        case 2:
+            selector = { include: [{ model: Employee, where: { punto_de_venta_id: posId }}, Provider] };
+            break;
+        case 3:
+            selector = { include: [Employee, Provider] };
+            break;
+    }
 
-const getAllPurchases = async () => {
-    const purchases = await Purchase.findAll({ include: [Employee, Provider] });
+    const purchases = await Purchase.findAll(selector);
 
     const purchasesFormatted = purchases.map((purchase) => ({
         id: purchase.id,

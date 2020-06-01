@@ -10,8 +10,9 @@ const getMonthlySalesReportFile = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
     const isPermitted = isValidScope(getMonthlySalesReportFile.name, component, role)
     if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
-    let retrievedSales = await Report.getMonthlySalesReport();
-    let retrievedPurchases = await Report.getMonthlyPurchasesReport();
+    const posId = res.locals.infoCurrentUser.pointOfSale.id;
+    let retrievedSales = await Report.getMonthlySalesReport(role, posId);
+    let retrievedPurchases = await Report.getMonthlyPurchasesReport(role, posId);
 
     let arrayBytes = Utils.arrayToExcel(retrievedSales, retrievedPurchases);
 
@@ -21,10 +22,11 @@ const getMonthlySalesReportFile = async (req, res) => {
 const getMonthlySalesReportByPos = async (req, res) => {
     try {
         const role = res.locals.infoCurrentUser.job.id
-        const isPermitted = isValidScope(getMonthlySalesReportFile.name, component, role)
+        const isPermitted = isValidScope(getMonthlySalesReportByPos.name, component, role)
         if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
-        let retrieved = await Report.getMonthlySalesReport();
-        let grouped = Utils.groupByField(retrieved, 'pointOfSale', 'saleValue');
+        const posId = res.locals.infoCurrentUser.pointOfSale.id;
+        let retrieved = await Report.getMonthlySalesReport(role, posId);
+        let grouped = Utils.groupByField(retrieved, 'employeeDocument', 'saleValue');
         res.status(httpStatus.OK).send(grouped);
     } catch (error) {
         console.log(error);
@@ -37,13 +39,13 @@ const getMonthlySalesReportByPos = async (req, res) => {
 const getMonthlyPurchasesReportByPos = async (req, res) => {
     try {
         const role = res.locals.infoCurrentUser.job.id
-        const isPermitted = isValidScope(getMonthlySalesReportFile.name, component, role)
+        const isPermitted = isValidScope(getMonthlyPurchasesReportByPos.name, component, role)
         if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
-        let retrieved = await Report.getMonthlyPurchasesReport();
-        let grouped = Utils.groupByField(retrieved, 'pointOfSale', 'purchaseValue');
+        const posId = res.locals.infoCurrentUser.pointOfSale.id;
+        let retrieved = await Report.getMonthlyPurchasesReport(role, posId);
+        let grouped = Utils.groupByField(retrieved, 'employeeDocument', 'purchaseValue');
         res.status(httpStatus.OK).send(grouped);
     } catch (error) {
-        console.log(error);
         return res
             .status(httpStatus.INTERNAL_SERVER_ERROR)
             .send({ message: "No se pudo crear el reporte de ventas mensual" });

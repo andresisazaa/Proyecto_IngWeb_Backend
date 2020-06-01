@@ -5,13 +5,10 @@ const { isValidScope } = require('../../services/utils')
 const component = 'Machine';
 
 const getAllMachines = async (req, res) => {
-     const isPermitted = isValidScope(getAllMachines.name, component)
+    const isPermitted = isValidScope(getAllMachines.name, component)
     if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     // Get pos Id to filter
-    const employee = {
-        id: res.locals.infoCurrentUser.id,
-        posId: res.locals.infoCurrentUser.pointOfSale.id,
-    }
+    const posId = res.locals.infoCurrentUser.pointOfSale.id
 
     let status = req.query.status;
 
@@ -20,7 +17,7 @@ const getAllMachines = async (req, res) => {
     }
 
     try {
-        const machines = await Machine.getAllMachines(employee.posId, status);
+        const machines = await Machine.getAllMachines(posId, status);
         return res
             .status(httpStatus.OK)
             .send(machines);
