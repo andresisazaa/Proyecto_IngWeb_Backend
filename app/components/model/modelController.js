@@ -6,7 +6,7 @@ const component = 'Model';
 
 const getAllModels = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
-    const isPermitted = isValidScope(getAllModels.name, component, role)
+    const isPermitted = await isValidScope(getAllModels.name, component, role)
     if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     try {
         const models = await Model.getAllModels();
@@ -23,7 +23,7 @@ const getAllModels = async (req, res) => {
 
 const getModelById = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
-    const isPermitted = isValidScope(getModelById.name, component, role)
+    const isPermitted = await isValidScope(getModelById.name, component, role)
     if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const {id} = req.params;
     try {
@@ -48,7 +48,7 @@ const getModelById = async (req, res) => {
 
 const createModel = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
-    const isPermitted = isValidScope(createModel.name, component, role)
+    const isPermitted = await isValidScope(createModel.name, component, role)
     if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const {modelName, brandId} = req.body;
 
@@ -73,7 +73,7 @@ const createModel = async (req, res) => {
 
 const updateModelById = async (req, res) => {
     const role = res.locals.infoCurrentUser.job.id
-    const isPermitted = isValidScope(updateModelById.name, component, role)
+    const isPermitted = await isValidScope(updateModelById.name, component, role)
     if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
     const { id } = req.params;
 

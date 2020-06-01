@@ -6,7 +6,7 @@ const component = 'PointOfSale';
 
 const getPointsOfSales = async (req, res) => {
   const role = res.locals.infoCurrentUser.job.id
-  const isPermitted = isValidScope(getPointsOfSales.name, component, role)
+  const isPermitted = await isValidScope(getPointsOfSales.name, component, role)
   if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
   try {
     const pointsOfSale = await PointOfSale.getPointsOfSale();
@@ -25,7 +25,7 @@ const getPointsOfSales = async (req, res) => {
 
 const getPointOfSaleById = async (req, res) => {
   const role = res.locals.infoCurrentUser.job.id
-  const isPermitted = isValidScope(getPointOfSaleById.name, component, role)
+  const isPermitted = await isValidScope(getPointOfSaleById.name, component, role)
   if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
   const { id } = req.params;
 
@@ -47,7 +47,7 @@ const getPointOfSaleById = async (req, res) => {
 
 const createPointOfSale = async (req, res) => {
   const role = res.locals.infoCurrentUser.job.id
-  const isPermitted = isValidScope(createPointOfSale.name, component, role)
+  const isPermitted = await isValidScope(createPointOfSale.name, component, role)
   if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
   const { address, posName } = req.body;
 
@@ -72,7 +72,7 @@ const createPointOfSale = async (req, res) => {
 
 const updatePointOfSale = async (req, res) => {
   const role = res.locals.infoCurrentUser.job.id
-  const isPermitted = isValidScope(updatePointOfSale.name, component, role)
+  const isPermitted = await isValidScope(updatePointOfSale.name, component, role)
   if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
   const { id } = req.params;
   
@@ -100,7 +100,7 @@ const updatePointOfSale = async (req, res) => {
 
 const deletePointOfSale = async (req, res) => {
   const role = res.locals.infoCurrentUser.job.id
-  const isPermitted = isValidScope(deletePointOfSale.name, component, role)
+  const isPermitted = await isValidScope(deletePointOfSale.name, component, role)
   if(!isPermitted) return res.status(httpStatus.UNAUTHORIZED).send({ message: 'Usted no cuenta con permisos para ejecutar esta acción' });
   const { id } = req.params;
   try {
